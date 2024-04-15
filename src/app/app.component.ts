@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { APIConnectionService } from '../../APIConnectionService/api-connection.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'Orch_FrontAngu_Praca';
+
+  constructor(private API_COMM : APIConnectionService) {}
+
 }
