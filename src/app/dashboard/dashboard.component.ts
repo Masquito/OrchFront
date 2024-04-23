@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AppComponent } from '../app.component';
+import { AuthGuardService } from '../../../AuthGuardService/auth-guard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +11,10 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
+  isUserLoggedIn = true;
+  constructor(private appComponent : AppComponent, private userLoggedInService : AuthGuardService){
+    appComponent.visible_nav = true;
+  }
+
+  
 }

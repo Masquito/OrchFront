@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../../Models/user';
+import { AppComponent } from '../app.component';
+import { AuthGuardService } from '../../../AuthGuardService/auth-guard.service';
 
 @Component({
   selector: 'app-login-page',
@@ -11,18 +13,19 @@ import { User } from '../../../Models/user';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
-export class LoginPageComponent {
+export class LoginPageComponent{
   config!: User;
   test: any;
   myForm: FormGroup;
+  constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder, private appComponent: AppComponent, private userLoggedInService : AuthGuardService) {
+    appComponent.visible_nav = false;
 
-  constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder) {
     this.myForm = this.fb.group({
       email: [''],
       password: ['']
     });
   }
-
+  
   Login(){
     this.GetApiDataFirstUser();
   } 
@@ -39,7 +42,7 @@ export class LoginPageComponent {
   }
 
   GetApiDataFirstUser() {
-    this.API_COMM.getConfig()
+    this.API_COMM.login(this.myForm.get('email')?.value, this.myForm.get('password')?.value)
       .subscribe({
         next: (data) => {
           console.log('API Response:', data);

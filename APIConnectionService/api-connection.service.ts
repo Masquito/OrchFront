@@ -9,10 +9,10 @@ export class APIConnectionService {
 
   constructor(private http: HttpClient) { }
 
-  configUrl = 'https://localhost:7023/api/Test';
+  configUrl = 'https://localhost:7023/api/Login';
 
-  getConfig() {
-    return this.http.get<User>(this.configUrl);
-  } 
+  login(email:string, password:string ) {
+    return this.http.post<User>(this.configUrl, {email, password})
+}
 
 }
