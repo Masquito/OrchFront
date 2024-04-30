@@ -12,7 +12,7 @@ export class APIConnectionService {
   configUrl = 'https://localhost:7023/api/Login';
 
   login(email:string, password:string ) {
-    return this.http.post<User>(this.configUrl, {email, password})
+    return this.http.post<any>(this.configUrl, {email, password})
 }
 
 }
