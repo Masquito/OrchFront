@@ -11,7 +11,12 @@ import { APIConnectionService } from '../../APIConnectionService/api-connection.
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  
+  isMenuOpen: boolean = false;
+
+toggleMenu() {
+  this.isMenuOpen = !this.isMenuOpen;
+}
+
   title = 'Orch_FrontAngu_Praca';
   visible_nav: boolean = true;
   constructor(private API_COMM : APIConnectionService) {}

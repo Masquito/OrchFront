@@ -9,10 +9,14 @@ export class APIConnectionService {
 
   constructor(private http: HttpClient) { }
 
-  configUrl = 'https://localhost:7023/api/Login';
+  loginControllerUrl = 'https://localhost:7023/api/Login';
+  RegisterControllerUrl = 'https://localhost:7023/api/Register';
 
   login(email:string, password:string ) {
-    return this.http.post<any>(this.configUrl, {email, password})
-}
+    return this.http.post<any>(this.loginControllerUrl, {email, password}, {observe: 'response'})
+  }
 
+  register(username:string, password:string, email:string, age:string, city:string, region:string){
+    return this.http.post<any>(this.RegisterControllerUrl, {username, password, email, age, city, region})
+  }
 }

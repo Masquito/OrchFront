@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../../Models/user';
 import { AppComponent } from '../app.component';
-import { map } from 'rxjs';
+import { catchError, map, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -19,7 +19,7 @@ export class LoginPageComponent{
   myForm: FormGroup;
   userRecived!: User;
   JWTToken : string = "empty";
-
+  verificationPassed : boolean = false;
 
   constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder, private appComponent: AppComponent) {
     appComponent.visible_nav = false;
@@ -35,20 +35,25 @@ export class LoginPageComponent{
   } 
 
   ValidateUser(){
-    const email = this.myForm.get('email')?.value;
-    const pass = this.myForm.get('password')?.value;
-    if(email == this.userRecived.Email && pass == this.userRecived.Password){
+    if(this.verificationPassed){
       this.router.navigate(['/Dashboard']);
     }
     else{
-      alert("zly username lub haslo");
+      alert("Login failed. Check Email or Password");
     }
   }
 
   GetApiDataFirstUser() {
     this.API_COMM.login(this.myForm.get('email')?.value, this.myForm.get('password')?.value)
       .pipe(
-        map((data) => {
+        catchError(error => {
+          if (error.status === 404) {
+            alert("Login failed. Check Email or Password");
+          }
+          return throwError(() => new Error("Error occured"));
+        }),
+        map((response) => {
+          const data = response.body;
           const user: User = {
             Email: data.user.email,
             Id: data.user.id,
@@ -60,6 +65,7 @@ export class LoginPageComponent{
             ProfilePhoto: data.user.profilephoto
           };
           console.log(user);
+          this.verificationPassed = true;
           return { user, token: data.token };
         })
       )
