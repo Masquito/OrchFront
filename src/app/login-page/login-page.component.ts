@@ -64,15 +64,14 @@ export class LoginPageComponent{
             City: data.user.city,
             ProfilePhoto: data.user.profilephoto
           };
-          console.log(user);
           this.verificationPassed = true;
           return { user, token: data.token };
         })
       )
       .subscribe({
         next: (result) => {
-          console.log('API Response:', result);
           sessionStorage.setItem("Token", result.token);
+          sessionStorage.setItem("LoggedUserId", result.user.Id!);
           this.userRecived = result.user;
           this.JWTToken = result.token;
           this.ValidateUser();

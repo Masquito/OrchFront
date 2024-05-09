@@ -1,26 +1,27 @@
-<nav class="navbar" role="navigation" aria-label="main navigation" *ngIf="visible_nav">
+<nav class="level" *ngIf="visible_nav">
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Profile">Your profile</a>
+  </p>
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Notifications">Notifications</a>
+  </p>
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Search">Search people</a>
+  </p>
   <div class="navbar-brand">
-    <a class="navbar-item" href="">
+    <a class="navbar-item" href="Dashboard">
       <img src="assets/images/logo.png" alt="Logo">
     </a>
-
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" (click)="toggleMenu()" [class.is-active]="isMenuOpen">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
   </div>
-
-  <div id="navbarBasicExample" class="navbar-menu" [class.is-active]="isMenuOpen">
-    <div class="navbar-start">
-      <a class="navbar-item">
-        Home
-      </a>
-
-      <a class="navbar-item" href="Dashboard">
-        DASHBOARD
-      </a>
-    </div>
-  </div>
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Messages">Messages</a>
+  </p>
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Payments">Payments</a>
+  </p>
+  <p class="level-item has-text-centered">
+    <a class="link is-info" href="Contact">Contact</a>
+  </p>
 </nav>
+
 <router-outlet></router-outlet>
