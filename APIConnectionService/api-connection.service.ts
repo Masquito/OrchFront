@@ -13,6 +13,8 @@ export class APIConnectionService {
   loginControllerUrl = 'https://localhost:7023/api/Login';
   RegisterControllerUrl = 'https://localhost:7023/api/Register';
   NotificationsControllerUrl = 'https://localhost:7023/api/Notifications';
+  NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
+  UsersUpdateDataControllerUrl = 'https://localhost:7023/api/Users/updatedata';
 
   login(email:string, password:string ) {
     return this.http.post<any>(this.loginControllerUrl, {email, password}, {observe: 'response'})
@@ -22,11 +24,27 @@ export class APIConnectionService {
     return this.http.post<any>(this.RegisterControllerUrl, {username, password, email, age, city, region})
   }
 
-  getNotificationsFrom3Months(Id: string){
+  getNotificationsFrom3Months(Id : any){
     const token = this.TC.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.NotificationsControllerUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  UpdateUserData(Id: any, username:string, password:string, Role:string, email:string, ProfilePhoto:any, region:string, age:string, city:string){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersUpdateDataControllerUrl, {Id, username, password, Role, email, ProfilePhoto, region, age, city}, {observe: 'response', headers: headers })
+  }
+
+  DeleteNotification(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.NotificationsControllerDeleteNotificationUrl, {Id}, {observe: 'response', headers: headers })
   }
 }

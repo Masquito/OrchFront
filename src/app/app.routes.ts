@@ -9,6 +9,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { PeopleSearchComponent } from './people-search/people-search.component';
 import { MessagesComponent } from './messages/messages.component';
 import { PaymentsComponent } from './payments/payments.component';
+import {RouterModule} from '@angular/router';
 import { ContactComponent } from './contact/contact.component';
 
 export const routes: Routes = [

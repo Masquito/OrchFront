@@ -4,6 +4,7 @@ export interface User {
     Password?: string;
     Email?: string;
     Region?: string;
+    Role?: string;
     Age?: number;
     City?: string;
     ProfilePhoto?: Blob

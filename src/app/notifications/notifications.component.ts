@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 import { catchError, map, throwError } from 'rxjs';
+import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
+import { User } from '../../../Models/user';
 
 @Component({
   selector: 'app-notifications',
@@ -13,11 +15,12 @@ import { catchError, map, throwError } from 'rxjs';
 export class NotificationsComponent implements OnInit{
 
   powiadomienia : any;
-  constructor(private apiConn : APIConnectionService){}
+  LogedUser! : User;
+  constructor(private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService){}
 
   ngOnInit() {
-    const id = sessionStorage.getItem("LoggedUserId")!;
-    this.apiConn.getNotificationsFrom3Months(id)
+    const ID = this.LoggedUserData.GetLoggedUserId();
+    this.apiConn.getNotificationsFrom3Months(ID)
     .pipe(
       catchError(error => {
         if (error.status === 404) {
@@ -32,10 +35,23 @@ export class NotificationsComponent implements OnInit{
     )
     .subscribe({
       next: (result) => {
-        console.log('API Response: Notifications:', result);
       },
       error: (error) => {
         console.error('API Error:', error);
+      }
+    });
+  }
+
+  DeleteNotification(Id : string){
+    this.apiConn.DeleteNotification(Id).subscribe({
+      next: (result) => {
+        console.log(result);
+      }
+    })
+
+    this.powiadomienia.forEach((element: any, index : number) => {
+      if(element.id == Id){
+        this.powiadomienia.splice(index, 1);
       }
     });
   }

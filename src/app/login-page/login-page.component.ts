@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule }
 import { User } from '../../../Models/user';
 import { AppComponent } from '../app.component';
 import { catchError, map, tap, throwError } from 'rxjs';
+import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 
 @Component({
   selector: 'app-login-page',
@@ -21,7 +22,7 @@ export class LoginPageComponent{
   JWTToken : string = "empty";
   verificationPassed : boolean = false;
 
-  constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder, private appComponent: AppComponent) {
+  constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder, private appComponent: AppComponent, private LoggedUserData : LoggedUserDataServiceService) {
     appComponent.visible_nav = false;
 
     this.myForm = this.fb.group({
@@ -60,6 +61,7 @@ export class LoginPageComponent{
             Username: data.user.username,
             Password: data.user.password,
             Region: data.user.region,
+            Role: data.user.role,
             Age: data.user.age,
             City: data.user.city,
             ProfilePhoto: data.user.profilephoto
@@ -71,7 +73,8 @@ export class LoginPageComponent{
       .subscribe({
         next: (result) => {
           sessionStorage.setItem("Token", result.token);
-          sessionStorage.setItem("LoggedUserId", result.user.Id!);
+          this.LoggedUserData.SetLoggedUserId(result.user.Id!);
+          this.LoggedUserData.SetLoggedUserRole(result.user.Role!);
           this.userRecived = result.user;
           this.JWTToken = result.token;
           this.ValidateUser();
