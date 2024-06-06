@@ -55,16 +55,15 @@ export class LoginPageComponent{
         }),
         map((response) => {
           const data = response.body;
-          const user: User = {
-            Email: data.user.email,
+          const user : User = {
             Id: data.user.id,
             Username: data.user.username,
-            Password: data.user.password,
-            Region: data.user.region,
+            Email: data.user.email,
             Role: data.user.role,
             Age: data.user.age,
+            Region: data.user.region,  //TERAZ JEST TAKI PROBLEM, ŻE TO CO PRZYCHODZI Z API JEST UNDEFINED, MOŻE ANGULAR NIE MA TAKIEGO TYPU I ZMIEN TYP W API
             City: data.user.city,
-            ProfilePhoto: data.user.profilephoto
+            ProfilePhoto: data.user.ProfilePhoto
           };
           this.verificationPassed = true;
           return { user, token: data.token };
@@ -73,6 +72,8 @@ export class LoginPageComponent{
       .subscribe({
         next: (result) => {
           sessionStorage.setItem("Token", result.token);
+          this.LoggedUserData.LoggedUser = result.user;
+          console.log(result.user);
           this.LoggedUserData.SetLoggedUserId(result.user.Id!);
           this.LoggedUserData.SetLoggedUserRole(result.user.Role!);
           this.userRecived = result.user;

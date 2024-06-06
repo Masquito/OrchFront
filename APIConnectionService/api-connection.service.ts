@@ -32,12 +32,12 @@ export class APIConnectionService {
     return this.http.post<any>(this.NotificationsControllerUrl, {Id}, {observe: 'response', headers: headers })
   }
 
-  UpdateUserData(Id: any, username:string, password:string, Role:string, email:string, ProfilePhoto:any, region:string, age:string, city:string){
+  UpdateUserData(formdata: FormData){
     const token = this.TC.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.post<any>(this.UsersUpdateDataControllerUrl, {Id, username, password, Role, email, ProfilePhoto, region, age, city}, {observe: 'response', headers: headers })
+    return this.http.post<any>(this.UsersUpdateDataControllerUrl, formdata, {observe: 'response', headers: headers })
   }
 
   DeleteNotification(Id : any){

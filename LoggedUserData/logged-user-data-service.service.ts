@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from '../Models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ export class LoggedUserDataServiceService {
 
   public LoggedUserId : string = "default value";
   public LoggedUserRole : string = "default value";
+  public LoggedUser! : User;
 
   constructor() { 
   }

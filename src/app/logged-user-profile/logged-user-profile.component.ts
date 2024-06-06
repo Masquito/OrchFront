@@ -15,31 +15,32 @@ export class LoggedUserProfileComponent {
 
   ProfilePhotoToSend : any;
   userdataform: FormGroup;
+  formData! : FormData;
 
   constructor(private fb : FormBuilder, private apiComm : APIConnectionService, private loggedUserData : LoggedUserDataServiceService, private router1 : Router){
+    this.formData = new FormData();
     this.userdataform = this.fb.group({
-      username:[''],
-      password: [''],
-      email: [''],
-      photo: new Uint16Array,
-      region:[''],
-      age:12,
-      city:['']
+      username:loggedUserData.LoggedUser.Username,
+      email:loggedUserData.LoggedUser.Email,
+      photo:loggedUserData.LoggedUser.ProfilePhoto,
+      password: "",
+      region:loggedUserData.LoggedUser.Region,
+      age:loggedUserData.LoggedUser.Age,
+      city:loggedUserData.LoggedUser.City
     })
   }
 
   SubmitData(event: Event): void{
     event.preventDefault();
-    this.apiComm.UpdateUserData(
-      this.loggedUserData.GetLoggedUserId(),    
-      this.userdataform.get('username')?.value,
-      this.userdataform.get('password')?.value,
-      this.loggedUserData.GetLoggedUserRole(),
-      this.userdataform.get('email')?.value,
-      this.ProfilePhotoToSend,
-      this.userdataform.get('region')?.value,
-      this.userdataform.get('age')?.value,
-      this.userdataform.get('city')?.value).subscribe({
+    this.formData.set('Id', this.loggedUserData.GetLoggedUserId()),    
+    this.formData.set('Username', this.userdataform.get('username')?.value),
+    this.formData.set('Password', this.userdataform.get('password')?.value),
+    this.formData.set('Role', this.loggedUserData.GetLoggedUserRole()),
+    this.formData.set('Email', this.userdataform.get('email')?.value),
+    this.formData.set('Region', this.userdataform.get('region')?.value),
+    this.formData.set('Age', this.userdataform.get('age')?.value),
+    this.formData.set('City', this.userdataform.get('city')?.value)
+    this.apiComm.UpdateUserData(this.formData).subscribe({
         next: (result) => {
           console.log(result);
         }
@@ -53,8 +54,9 @@ export class LoggedUserProfileComponent {
     
     if (input.files && input.files[0]) {
       let file = input.files[0];
+      this.ProfilePhotoToSend = file;
+      this.formData.set('ProfilePhoto', file);
       this.convertFileToByteArray(file).then((byteArray) => {
-        this.ProfilePhotoToSend = byteArray;
         this.displayImageFromByteArray(byteArray);
       });
     }
