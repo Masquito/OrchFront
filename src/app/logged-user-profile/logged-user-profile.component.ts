@@ -16,8 +16,10 @@ export class LoggedUserProfileComponent {
   ProfilePhotoToSend : any;
   userdataform: FormGroup;
   formData! : FormData;
+  LoggedUserRole! : String;
 
   constructor(private fb : FormBuilder, private apiComm : APIConnectionService, private loggedUserData : LoggedUserDataServiceService, private router1 : Router){
+    this.LoggedUserRole = loggedUserData.GetLoggedUserRole();
     this.formData = new FormData();
     this.userdataform = this.fb.group({
       username:loggedUserData.LoggedUser.Username,
@@ -28,6 +30,12 @@ export class LoggedUserProfileComponent {
       age:loggedUserData.LoggedUser.Age,
       city:loggedUserData.LoggedUser.City
     })
+    const LId = loggedUserData.GetLoggedUserId();
+    apiComm.GetUserImage(LId).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const img = document.getElementById('image') as HTMLImageElement;
+      img.src = url;
+    });
   }
 
   SubmitData(event: Event): void{

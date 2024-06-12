@@ -46,4 +46,11 @@
         </div>
         <button type="submit" class="button is-medium is-success">Update Data</button>
     </form>
+
+    @if(LoggedUserRole == "FUA"){
+      <p>You are a Full Access User</p>
+    }
+    @else {
+      <p>You are a Non Full Access User</p>
+    }
 </section>

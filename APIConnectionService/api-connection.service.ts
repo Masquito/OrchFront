@@ -15,6 +15,7 @@ export class APIConnectionService {
   NotificationsControllerUrl = 'https://localhost:7023/api/Notifications';
   NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
   UsersUpdateDataControllerUrl = 'https://localhost:7023/api/Users/updatedata';
+  UsersGetIamgeControllerUrl = 'https://localhost:7023/api/Users/getuserphoto';
 
   login(email:string, password:string ) {
     return this.http.post<any>(this.loginControllerUrl, {email, password}, {observe: 'response'})
@@ -46,5 +47,13 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.NotificationsControllerDeleteNotificationUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  GetUserImage(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post(this.UsersGetIamgeControllerUrl, {Id}, {headers: headers, responseType: 'blob' })
   }
 }
