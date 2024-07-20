@@ -16,6 +16,8 @@ export class APIConnectionService {
   NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
   UsersUpdateDataControllerUrl = 'https://localhost:7023/api/Users/updatedata';
   UsersGetIamgeControllerUrl = 'https://localhost:7023/api/Users/getuserphoto';
+  UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
+  MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
 
   login(email:string, password:string ) {
     return this.http.post<any>(this.loginControllerUrl, {email, password}, {observe: 'response'})
@@ -41,6 +43,14 @@ export class APIConnectionService {
     return this.http.post<any>(this.UsersUpdateDataControllerUrl, formdata, {observe: 'response', headers: headers })
   }
 
+  GetUsersSearchedForWithFilters(formdata: FormData){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersGetSearchedUsersWithFilters, formdata, {observe: 'response', headers: headers })
+  }
+
   DeleteNotification(Id : any){
     const token = this.TC.getToken();
     const headers = new HttpHeaders({
@@ -55,5 +65,13 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post(this.UsersGetIamgeControllerUrl, {Id}, {headers: headers, responseType: 'blob' })
+  }
+
+  GetAllUserMessages(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.MessagesGetAllForUser, {Id}, {observe: 'response', headers: headers })
   }
 }

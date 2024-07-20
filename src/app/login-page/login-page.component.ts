@@ -61,7 +61,7 @@ export class LoginPageComponent{
             Email: data.user.email,
             Role: data.user.role,
             Age: data.user.age,
-            Region: data.user.region,  //TERAZ JEST TAKI PROBLEM, ŻE TO CO PRZYCHODZI Z API JEST UNDEFINED, MOŻE ANGULAR NIE MA TAKIEGO TYPU I ZMIEN TYP W API
+            Region: data.user.region,
             City: data.user.city,
             ProfilePhoto: data.user.ProfilePhoto
           };

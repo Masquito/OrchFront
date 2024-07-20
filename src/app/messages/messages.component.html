@@ -1,1 +1,7 @@
-<p>messages works!</p>
+@for (user of objectsToDisplay; track user) {
+    <div class="notification is-info">
+        <img class="image" alt="Your Image" >
+        {{user.MessageText}}<br>
+        {{user.Username}}
+    </div>
+}
