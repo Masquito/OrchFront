@@ -1,0 +1,43 @@
+<section class="section">
+        <div class="container">
+            <div class="columns is-vcentered">
+                <div class="column has-text-centered">
+                    <img id="image" alt="Your Image" width="200px" height="200px"><br><br>
+                    <div class="box">{{userToView.Username}}</div>
+                    <div class="box">{{userToView.Age}}</div>
+                    <div class="box">{{userToView.Region}}</div>
+                    <div class="box">{{userToView.City}}</div>
+                </div>
+            </div>
+        </div>     
+</section>
+<section class="section">
+  <a class="level-item" aria-label="retweet" (click)="switchVis()">
+    <span class="icon is-small" (click)="switchVis()">
+      <i class="fa fas fa-envelope" aria-hidden="true" (click)="switchVis()"></i>
+    </span>
+  </a>
+  <a class="level-item" aria-label="reply">
+      <span class="icon is-small">
+        <i class="fa fas fa-arrow-right" aria-hidden="true"></i>
+      </span>
+    </a>
+    <div class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <form [formGroup]="MessageToSendForm" (ngSubmit)="SubmitData($event)">
+          <div class="control">
+            <textarea
+              class="textarea is-focused"
+              placeholder="Focused textarea"
+              formControlName="Message"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="columns is-centered">
+        <button type="submit" class="button is-medium is-success">Send Message</button>
+      </div>
+      <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+    </div>
+</section>

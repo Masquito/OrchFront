@@ -11,6 +11,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { PaymentsComponent } from './payments/payments.component';
 import {RouterModule} from '@angular/router';
 import { ContactComponent } from './contact/contact.component';
+import { OtherUserProfileComponent } from './other-user-profile/other-user-profile.component';
 
 export const routes: Routes = [
     {path:'', component:LoginPageComponent},
@@ -22,5 +23,6 @@ export const routes: Routes = [
     {path:'Search', component:PeopleSearchComponent, canActivate: [TokenGuard]},
     {path:'Messages', component:MessagesComponent, canActivate: [TokenGuard]},
     {path:'Payments', component:PaymentsComponent, canActivate: [TokenGuard]},
-    {path:'Contact', component:ContactComponent, canActivate: [TokenGuard]}
+    {path:'Contact', component:ContactComponent, canActivate: [TokenGuard]},
+    {path:'BrowseUsers', component:OtherUserProfileComponent, canActivate: [TokenGuard]}
 ];

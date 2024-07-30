@@ -9,6 +9,9 @@ export class LoggedUserDataServiceService {
   public LoggedUserId : string = "default value";
   public LoggedUserRole : string = "default value";
   public LoggedUser! : User;
+  public UserToProfileView : User = {
+    Id:"def",
+  }
 
   constructor() { 
   }

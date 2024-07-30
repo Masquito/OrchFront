@@ -45,7 +45,7 @@
                     <article class="media">
                       <div class="media-left">
                         <figure class="image is-64x64">
-                          <img src="https://bulma.io/assets/images/placeholders/128x128.png" alt="Image" />
+                          <img id={{user.Id}} alt="Image" />
                         </figure>
                       </div>
                       <div class="media-content">
@@ -68,7 +68,7 @@
                             </a>
                             <a class="level-item" aria-label="reply">
                                 <span class="icon is-small">
-                                  <i class="fa fas fa-arrow-right" aria-hidden="true"></i>
+                                  <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.Id)"></i>
                                 </span>
                               </a>
                           </div>

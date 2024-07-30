@@ -24,7 +24,7 @@ export class MessagesComponent implements OnInit{
     .pipe(
       catchError(error => {
         if (error.status === 404) {
-          alert("You don't have any Notifications");
+          alert("You don't have any Messagess");
         }
         return throwError(() => new Error("Error occured"));
       }),
@@ -57,7 +57,7 @@ export class MessagesComponent implements OnInit{
               
               this.apiConn.GetUserImage(user.id).subscribe(blob => {
                 const url = window.URL.createObjectURL(blob);   
-                Array.prototype.forEach.call(document.getElementsByClassName('image'), 
+                Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
                   item => item.setAttribute("src",url));
               });
             }

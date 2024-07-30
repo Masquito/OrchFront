@@ -16,8 +16,17 @@ export class APIConnectionService {
   NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
   UsersUpdateDataControllerUrl = 'https://localhost:7023/api/Users/updatedata';
   UsersGetIamgeControllerUrl = 'https://localhost:7023/api/Users/getuserphoto';
+  UsersGetUserByIdUrl = 'https://localhost:7023/api/Users/getuserbyid';
   UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
   MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
+
+  GetUserById(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersGetUserByIdUrl, {Id}, {observe: 'response', headers: headers })
+  }
 
   login(email:string, password:string ) {
     return this.http.post<any>(this.loginControllerUrl, {email, password}, {observe: 'response'})

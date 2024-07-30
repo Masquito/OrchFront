@@ -73,7 +73,6 @@ export class LoginPageComponent{
         next: (result) => {
           sessionStorage.setItem("Token", result.token);
           this.LoggedUserData.LoggedUser = result.user;
-          console.log(result.user);
           this.LoggedUserData.SetLoggedUserId(result.user.Id!);
           this.LoggedUserData.SetLoggedUserRole(result.user.Role!);
           this.userRecived = result.user;

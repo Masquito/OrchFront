@@ -6,6 +6,8 @@ import { catchError, map, throwError } from 'rxjs';
 import { User } from '../../../Models/user';
 import { resourceUsage } from 'process';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-people-search',
@@ -20,13 +22,48 @@ export class PeopleSearchComponent{
   formData! : FormData;
   usersArrived = new Array();
 
-  constructor(private fb : FormBuilder, private apiComm : APIConnectionService,private loggedUserData : LoggedUserDataServiceService,){
+  constructor(private fb : FormBuilder, private apiComm : APIConnectionService,private loggedUserData : LoggedUserDataServiceService, private router1: Router){
     this.userdataform = this.fb.group({
       region:loggedUserData.LoggedUser.Region,
       age:loggedUserData.LoggedUser.Age,
       city:loggedUserData.LoggedUser.City
     })
     this.formData = new FormData();
+  }
+
+  SeeUserProfile(Id : string): void {
+    this.apiComm.GetUserById(Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          alert("Nie znaleziono użytkownika");
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        const user : User = {
+          Id: data.userToReturn.id,
+          Username: data.userToReturn.username,
+          Email: data.userToReturn.email,
+          Role: data.userToReturn.role,
+          Age: data.userToReturn.age,
+          Region: data.userToReturn.region,
+          City: data.userToReturn.city,
+        };
+        this.loggedUserData.UserToProfileView = user;
+        return { user };
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        this.router1.navigate(['/BrowseUsers']);
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
+    
   }
 
   SubmitData(event: Event): void{
@@ -67,6 +104,12 @@ export class PeopleSearchComponent{
       next: (result) => {
         result.users.forEach(element => {
           console.log(element);
+
+          this.apiComm.GetUserImage(element.Id).subscribe(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const img = document.getElementById(element.Id) as HTMLImageElement;
+            img.src = url;
+          });
         })
       },
       error: (error) => {
