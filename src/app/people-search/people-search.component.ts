@@ -20,7 +20,10 @@ export class PeopleSearchComponent{
   index : number = 0;
   userdataform: FormGroup;
   formData! : FormData;
+  formDataMessage! : FormData;
   usersArrived = new Array();
+  MessageToSendForm: FormGroup;
+  currentUserToSendMessageTo : any;
 
   constructor(private fb : FormBuilder, private apiComm : APIConnectionService,private loggedUserData : LoggedUserDataServiceService, private router1: Router){
     this.userdataform = this.fb.group({
@@ -29,6 +32,11 @@ export class PeopleSearchComponent{
       city:loggedUserData.LoggedUser.City
     })
     this.formData = new FormData();
+
+    this.MessageToSendForm = this.fb.group({
+      Message:"Type message here"
+    })
+    this.formDataMessage = new FormData();
   }
 
   SeeUserProfile(Id : string): void {
@@ -116,5 +124,32 @@ export class PeopleSearchComponent{
         console.error('API Error:', error);
       }
     });
+  }
+
+
+  SendMSG(Id : any){
+    this.currentUserToSendMessageTo = Id;
+    this.switchVis();
+  }
+  switchVis(){
+    var item = document.getElementsByClassName('modal')[0].className;
+    if(item == "modal"){
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal is-active");
+    }
+    else{
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal");
+    }
+  }
+
+  SendMessage(event : Event){
+    this.formDataMessage.set('AuthorId', this.loggedUserData.GetLoggedUserId()),
+    this.formDataMessage.set('DeliveryId', this.currentUserToSendMessageTo),
+    this.formDataMessage.set('Content', this.MessageToSendForm.get('Message')?.value)
+    this.apiComm.SendUserMessage(this.formDataMessage).subscribe({
+      next: (result) => {
+        console.log(result);
+      }
+    })
+    this.switchVis();
   }
 }

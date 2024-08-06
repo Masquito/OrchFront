@@ -44,6 +44,15 @@ export class OtherUserProfileComponent{
   }
 
   SubmitData(event: Event): void {
-    alert("it works");
+    const deli = this.loggedUserData.UserToProfileView.Id!.toString();
+    this.formData.set('AuthorId', this.loggedUserData.GetLoggedUserId()),
+    this.formData.set('DeliveryId', deli),
+    this.formData.set('Content', this.MessageToSendForm.get('Message')?.value)
+    this.apiconn.SendUserMessage(this.formData).subscribe({
+      next: (result) => {
+        console.log(result);
+      }
+    })
+    this.switchVis();
   }
 }

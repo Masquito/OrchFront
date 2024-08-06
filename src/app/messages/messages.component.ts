@@ -3,11 +3,15 @@ import { APIConnectionService } from '../../../APIConnectionService/api-connecti
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { catchError, map, throwError } from 'rxjs';
 import { userMessage } from '../../../Models/userMessage';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { User } from '../../../Models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.css'
 })
@@ -16,7 +20,16 @@ export class MessagesComponent implements OnInit{
   messagess : any;
   users : any;
   objectsToDisplay = new Array();
-  constructor(private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService){}
+  MessageToSendForm: FormGroup;
+  currentUserToSendMessageTo : any;
+  formDataMessage! : FormData;
+  constructor(private fb : FormBuilder, private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService, private router1 : Router){
+    this.MessageToSendForm = this.fb.group({
+      Message:"Type message here"
+    })
+
+    this.formDataMessage = new FormData();
+  }
 
   ngOnInit() {
     const ID = this.LoggedUserData.GetLoggedUserId();
@@ -49,7 +62,8 @@ export class MessagesComponent implements OnInit{
                 Username: user.username,
                 Age: user.age,
                 MessageText: message.content,
-                SendDate: message.sendDate
+                SendDate: message.sendDate,
+                AuthorId: user.id
               }
               if(!this.objectsToDisplay.includes(um)){
                 this.objectsToDisplay.push(um);
@@ -70,5 +84,66 @@ export class MessagesComponent implements OnInit{
         console.error('API Error:', error);
       }
     });
+  }
+
+  SendMSG(Id : any){
+    this.currentUserToSendMessageTo = Id;
+    this.switchVis();
+  }
+  switchVis(){
+    var item = document.getElementsByClassName('modal')[0].className;
+    if(item == "modal"){
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal is-active");
+    }
+    else{
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal");
+    }
+  }
+
+  SendMessage(event : Event){
+    this.formDataMessage.set('AuthorId', this.LoggedUserData.GetLoggedUserId()),
+    this.formDataMessage.set('DeliveryId', this.currentUserToSendMessageTo),
+    this.formDataMessage.set('Content', this.MessageToSendForm.get('Message')?.value)
+    this.apiConn.SendUserMessage(this.formDataMessage).subscribe({
+      next: (result) => {
+        console.log(result);
+      }
+    })
+    this.switchVis();
+  }
+
+  SeeUserProfile(Id : any): void {
+    this.apiConn.GetUserById(Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          alert("Nie znaleziono użytkownika");
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        const user : User = {
+          Id: data.userToReturn.id,
+          Username: data.userToReturn.username,
+          Email: data.userToReturn.email,
+          Role: data.userToReturn.role,
+          Age: data.userToReturn.age,
+          Region: data.userToReturn.region,
+          City: data.userToReturn.city,
+        };
+        this.LoggedUserData.UserToProfileView = user;
+        return { user };
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        this.router1.navigate(['/BrowseUsers']);
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
+    
   }
 }

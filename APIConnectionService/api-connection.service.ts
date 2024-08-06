@@ -19,6 +19,7 @@ export class APIConnectionService {
   UsersGetUserByIdUrl = 'https://localhost:7023/api/Users/getuserbyid';
   UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
   MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
+  MessagesSendUserMessage = 'https://localhost:7023/api/Messages/reciveMessageSendByUserToUser';
 
   GetUserById(Id : any){
     const token = this.TC.getToken();
@@ -42,14 +43,6 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.NotificationsControllerUrl, {Id}, {observe: 'response', headers: headers })
-  }
-
-  UpdateUserData(formdata: FormData){
-    const token = this.TC.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post<any>(this.UsersUpdateDataControllerUrl, formdata, {observe: 'response', headers: headers })
   }
 
   GetUsersSearchedForWithFilters(formdata: FormData){
@@ -82,5 +75,21 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.MessagesGetAllForUser, {Id}, {observe: 'response', headers: headers })
+  }
+
+  SendUserMessage(formdata: FormData){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.MessagesSendUserMessage, formdata, {observe: 'response', headers: headers })
+  }
+
+  UpdateUserData(formdata: FormData){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersUpdateDataControllerUrl, formdata, {observe: 'response', headers: headers })
   }
 }

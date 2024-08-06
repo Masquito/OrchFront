@@ -4,4 +4,5 @@ export interface userMessage{
     Age?: number;
     MessageText?: string;
     SendDate?: Date;
+    AuthorId?: any;
 }
