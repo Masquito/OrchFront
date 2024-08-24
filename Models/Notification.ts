@@ -1,4 +1,4 @@
-export interface Notification {
+export interface NotificationMy {
     Id?:string,
     Content?:string,
     SendDate?:Date,

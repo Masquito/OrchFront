@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AppComponent } from '../app.component';
+import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,9 @@ import { AppComponent } from '../app.component';
 })
 export class DashboardComponent {
 
-  constructor(private appC: AppComponent){
+  constructor(private appC: AppComponent, private apiComm : APIConnectionService){
     appC.visible_nav = true;
+
+    apiComm.cleanExcessNotifications().subscribe();
   }
 }

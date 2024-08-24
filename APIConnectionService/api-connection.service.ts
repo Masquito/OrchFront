@@ -11,6 +11,7 @@ export class APIConnectionService {
   constructor(private http: HttpClient, private TC: TokenContainerService) { }
 
   loginControllerUrl = 'https://localhost:7023/api/Login';
+  SystemCleaningControllerUrl = 'https://localhost:7023/api/SystemCleaning';
   RegisterControllerUrl = 'https://localhost:7023/api/Register';
   NotificationsControllerUrl = 'https://localhost:7023/api/Notifications';
   NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
@@ -20,6 +21,8 @@ export class APIConnectionService {
   UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
   MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
   MessagesSendUserMessage = 'https://localhost:7023/api/Messages/reciveMessageSendByUserToUser';
+  UsersCheckIfUsernameExists = 'https://localhost:7023/api/Users/checkifusernameexists';
+  UsersCheckIfEmailExists = 'https://localhost:7023/api/Users/checkifemailexists';
 
   GetUserById(Id : any){
     const token = this.TC.getToken();
@@ -27,6 +30,14 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.UsersGetUserByIdUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  cleanExcessNotifications(){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.SystemCleaningControllerUrl, {}, {observe: 'response', headers: headers })
   }
 
   login(email:string, password:string ) {
@@ -91,5 +102,21 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.UsersUpdateDataControllerUrl, formdata, {observe: 'response', headers: headers })
+  }
+
+  CheckIfEmailExists(email : string){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersCheckIfEmailExists, {email}, {observe: 'response', headers: headers })
+  }
+
+  CheckIfUsernameExists(username : string){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersCheckIfUsernameExists, {username}, {observe: 'response', headers: headers })
   }
 }

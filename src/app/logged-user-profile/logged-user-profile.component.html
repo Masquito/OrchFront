@@ -1,56 +1,83 @@
-<section class="section">
+<section class="hero is-dark is-fullheight-with-navbar">
     <form [formGroup]="userdataform" (ngSubmit)="SubmitData($event)">
-        <div class="container">
-            <div class="columns is-vcentered">
-                <div class="column has-text-centered">
-                    <div class="field">
-                        <p class="control has-icons-left has-icons-right">
-                          <input formControlName="username" class="input" type="email" placeholder="Username">
-                        </p>
-                      </div>
-                      <div class="field">
-                        <p class="control has-icons-left has-icons-right">
-                          <input formControlName="password" class="input" type="email" placeholder="Password">
-                        </p>
-                      </div>
-                      <div class="field">
-                        <p class="control has-icons-left has-icons-right">
-                          <input formControlName="email" class="input" type="email" placeholder="Email">
-                        </p>
-                      </div>
+      <div class="container">
+          <div class="columns is-vcentered">
+              <div class="column has-text-centered">
+                <div class="field">
+                  <label class="label has-text-white">Username</label>
+                  <div class="control has-icons-left has-icons-right">
+                    <input id="Unameinput" formControlName="username" class="input is-hovered is-rounded is-link" type="text" placeholder="Username" (blur)="CheckUsername()">
+                    <span class="icon is-small is-left">
+                      <i class="fa fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                      <i class="fa fas fa-check" *ngIf="usernameIcon"></i>
+                    </span>
+                  </div>
+                  <p class="help is-danger" *ngIf="doesUsernameExists">This username is already taken</p>
                 </div>
-                <div class="column has-text-centered">
-                  <img id="image" alt="Your Image"><br><br>
-                  <input formControlName="photo" type="file" (change)="onFileSelected($event)">
+                <div class="field">
+                  <label class="label has-text-white">Password</label>
+                  <div class="control has-icons-left has-icons-right">
+                    <input formControlName="password" class="input is-hovered is-rounded is-link" type="password" placeholder="Password">
+                    <span class="icon is-small is-left">
+                      <i class="fa fas fa-key"></i>
+                    </span>
+                  </div>
                 </div>
-                <div class="column has-text-centered">
-                    <div class="column has-text-centered">
-                        <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                              <input formControlName="region" class="input" type="email" placeholder="Region">
-                            </p>
-                          </div>
-                          <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                              <input formControlName="age" class="input" type="email" placeholder="Age">
-                            </p>
-                          </div>
-                          <div class="field">
-                            <p class="control has-icons-left has-icons-right">
-                              <input formControlName="city" class="input" type="email" placeholder="City">
-                            </p>
-                          </div>
+                  <div class="field">
+                    <label class="label has-text-white">Email</label>
+                    <div class="control has-icons-left has-icons-right">
+                      <input formControlName="email" class="input is-hovered is-rounded is-link" type="email" placeholder="Email" (blur)="CheckEmail()">
+                      <span class="icon is-small is-left">
+                        <i class="fa fas fa-envelope"></i>
+                      </span>
+                      <span class="icon is-small is-right">
+                        <i class="fa fas fa-check" *ngIf="emailIcon"></i>
+                      </span>
                     </div>
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="button is-medium is-success">Update Data</button>
+                    <p class="help is-danger" *ngIf="doesEmailExist">This email is invalid</p>
+                  </div>
+              </div>
+              <div class="column has-text-centered">
+                <br><br><br><br><br><br>
+                <img id="image" alt="Your Image"><br><br>
+                <input formControlName="photo" type="file" (change)="onFileSelected($event)"><br><br><br>
+                <button type="submit" class="button is-medium is-success">Update Data</button>
+              </div>
+              <div class="column has-text-centered">
+                  <div class="column has-text-centered">
+                    <div class="field">
+                      <label class="label has-text-white">Region</label>
+                      <div class="control">
+                        <div class="select is-hovered is-rounded is-link">
+                          <select [(ngModel)]="selectedWojewodztwo" [ngModelOptions]="{standalone: true}">
+                              <option *ngFor="let c of wojewodztwa" [ngValue]="c">{{c}}</option>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+                        <div class="field">
+                          <label class="label has-text-white">Age</label>
+                          <div class="control has-icons-left has-icons-right">
+                            <input formControlName="age" class="input is-hovered is-rounded is-link" type="text" placeholder="Age">
+                            <span class="icon is-small is-left">
+                              <i class="fa fas fa-id-card-o"></i>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="field">
+                          <label class="label has-text-white">City</label>
+                          <div class="control has-icons-left has-icons-right">
+                            <input formControlName="city" class="input is-hovered is-rounded is-link" type="text" placeholder="City">
+                            <span class="icon is-small is-left">
+                              <i class="fa fas fa-building"></i>
+                            </span>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
+      </div>
     </form>
-
-    @if(LoggedUserRole == "FUA"){
-      <p>You are a Full Access User</p>
-    }
-    @else {
-      <p>You are a Non Full Access User</p>
-    }
 </section>

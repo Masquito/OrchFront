@@ -1,27 +1,43 @@
-<nav class="level" *ngIf="visible_nav">
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Profile']">Your profile</a>
-  </p>
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Notifications']">Notifications</a>
-  </p>
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Search']">Search people</a>
-  </p>
-  <div class="navbar-brand">
-    <a class="navbar-item" [routerLink]="['/Dashboard']">
-      <img src="assets/images/logo.png" alt="Logo">
+<nav class="navbar is-white" role="navigation" aria-label="main navigation" *ngIf="visible_nav">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navig" id="burger" (click)="ShowMenu()">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
     </a>
+
+  <div id="navig" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" [routerLink]="['/Profile']">Your profile</a>
+
+      <a class="navbar-item" [routerLink]="['/Notifications']">Notifications</a>
+
+      <a class="navbar-item" [routerLink]="['/Search']">Search people</a>
+
+      <div class="navbar-brand">
+        <a class="navbar-item" [routerLink]="['/Dashboard']">
+          <img src="assets/images/logo.png" alt="Logo">
+        </a>
+      </div>
+
+      <a class="navbar-item" [routerLink]="['/Messages']">Your Messages</a>
+
+      <a class="navbar-item" [routerLink]="['/Payments']">Transactions</a>
+
+      <a class="navbar-item" [routerLink]="['/Contact']">Contact Us</a>
+    </div>
   </div>
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Messages']">Your Messages</a>
-  </p>
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Payments']">Transactions</a>
-  </p>
-  <p class="level-item has-text-centered">
-    <a class="link is-info" [routerLink]="['/Contact']">Contact Us</a>
-  </p>
 </nav>
 
 <router-outlet></router-outlet>
+
+
+<footer class="footer" *ngIf="visible_nav">
+  <div class="content has-text-centered">
+    <p>
+      <strong>Orchard</strong> by Adam Wielogórski.
+      <a [routerLink]="['/Contact']">Contact Us</a> if you have any questions
+    </p>
+  </div>
+</footer>
+ 

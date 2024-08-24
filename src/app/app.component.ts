@@ -15,12 +15,12 @@ import { RouterModule } from '@angular/router';
 export class AppComponent {
   isMenuOpen: boolean = false;
 
-toggleMenu() {
-  this.isMenuOpen = !this.isMenuOpen;
-}
-
   title = 'Orch_FrontAngu_Praca';
   visible_nav: boolean = true;
   constructor(private API_COMM : APIConnectionService) {}
 
+  ShowMenu(){
+    let menu = document.getElementById('navig')
+    menu?.classList.toggle('is-active');
+  }
 }

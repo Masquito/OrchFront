@@ -4,6 +4,7 @@ import { APIConnectionService } from '../../../APIConnectionService/api-connecti
 import { catchError, map, throwError } from 'rxjs';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { User } from '../../../Models/user';
+import { NotificationMy } from '../../../Models/Notification';
 
 @Component({
   selector: 'app-notifications',
@@ -14,7 +15,7 @@ import { User } from '../../../Models/user';
 })
 export class NotificationsComponent implements OnInit{
 
-  powiadomienia : any;
+  powiadomienia = new Array();
   LogedUser! : User;
   constructor(private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService){}
 
@@ -29,7 +30,10 @@ export class NotificationsComponent implements OnInit{
         return throwError(() => new Error("Error occured"));
       }),
       map((response) => {
-        this.powiadomienia = response.body;
+        const data = response.body;
+        data.forEach((element: {notification : NotificationMy, dateL : String, dateS : String}) => {
+          this.powiadomienia.push(element);
+        })
         return(this.powiadomienia);
       })
     )
