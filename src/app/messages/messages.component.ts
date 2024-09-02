@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { catchError, map, throwError } from 'rxjs';
@@ -23,6 +23,8 @@ export class MessagesComponent implements OnInit{
   MessageToSendForm: FormGroup;
   currentUserToSendMessageTo : any;
   formDataMessage! : FormData;
+  filter = signal('');
+
   constructor(private fb : FormBuilder, private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService, private router1 : Router){
     this.MessageToSendForm = this.fb.group({
       Message:"Type message here"
@@ -50,9 +52,6 @@ export class MessagesComponent implements OnInit{
       next: (result) => {
         this.messagess = result.data.messages;
         this.users = result.data.users;  
-        console.log(this.messagess);
-        console.log(this.users);
-        
         this.messagess.forEach((message: { authorId: any; content: any; sendDate: Date;}) => {
           this.users.forEach((user: { id: any; username:string; age:number;}) => {
             if(message.authorId == user.id){
@@ -61,7 +60,7 @@ export class MessagesComponent implements OnInit{
                 ProfilePhoto: prof,
                 Username: user.username,
                 Age: user.age,
-                MessageText: message.content,
+                MessageText: ": " + message.content,
                 SendDate: message.sendDate,
                 AuthorId: user.id
               }
@@ -84,6 +83,58 @@ export class MessagesComponent implements OnInit{
         console.error('API Error:', error);
       }
     });
+  }
+
+  FilterMessages(event : Event){
+    this.objectsToDisplay = new Array();
+    const filter = (event.target as HTMLInputElement).value;
+    this.filter.set(filter);
+    let fd = new FormData();
+    fd.set('Id', this.LoggedUserData.GetLoggedUserId());
+    fd.set('Username', filter);
+    this.apiConn.GetAllUserMessagesWithFilter(fd)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          alert("You don't have any Messagess");
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        this.messagess = result.data.messages;
+        this.users = result.data.users;  
+        this.messagess.forEach((message: { authorId: any; content: any; sendDate: Date;}) => {
+          this.users.forEach((user: { id: any; username:string; age:number;}) => {
+            if(message.authorId == user.id){
+              let prof = new Blob;
+              let um : userMessage = {
+                ProfilePhoto: prof,
+                Username: user.username,
+                Age: user.age,
+                MessageText: ":  " + message.content,
+                SendDate: message.sendDate,
+                AuthorId: user.id
+              }
+              if(!this.objectsToDisplay.includes(um)){
+                this.objectsToDisplay.push(um);
+              }
+              
+              this.apiConn.GetUserImage(user.id).subscribe(blob => {
+                const url = window.URL.createObjectURL(blob);   
+                Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
+                  item => item.setAttribute("src",url));
+              });
+            }
+          });
+        });
+      }
+    })
   }
 
   SendMSG(Id : any){
@@ -145,5 +196,6 @@ export class MessagesComponent implements OnInit{
       }
     });
     
+    this.apiConn.SendNotoficationWhenProfileVisited(this.LoggedUserData.LoggedUser.Id, Id).subscribe();
   }
 }

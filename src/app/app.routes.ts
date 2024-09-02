@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
-import { TokenGuard } from '../../AuthGuardService/auth-guard.service';
+import { BrowseUserGuard, TokenGuard } from '../../AuthGuardService/auth-guard.service';
 import { RegisterComponent } from './register/register.component';
 import { LoggedUserProfileComponent } from './logged-user-profile/logged-user-profile.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -24,5 +24,5 @@ export const routes: Routes = [
     {path:'Messages', component:MessagesComponent, canActivate: [TokenGuard]},
     {path:'Payments', component:PaymentsComponent, canActivate: [TokenGuard]},
     {path:'Contact', component:ContactComponent, canActivate: [TokenGuard]},
-    {path:'BrowseUsers', component:OtherUserProfileComponent, canActivate: [TokenGuard]}
+    {path:'BrowseUsers', component:OtherUserProfileComponent, canActivate: [TokenGuard, BrowseUserGuard]}
 ];

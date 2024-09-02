@@ -45,7 +45,7 @@
         @if(usersArrived.length != 0){
           <div class="columns is-multiline">
               <div class="column is-one-quarter" *ngFor="let user of usersArrived">
-                  <div class="box">
+                  <div class="box has-background-light">
                       <article class="media">
                         <div class="media-left">
                           <figure class="image is-64x64">
@@ -87,23 +87,25 @@
 </section>
 
 
-<section class="section">
-  <div class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <form [formGroup]="MessageToSendForm" (ngSubmit)="SendMessage($event)">
-        <div class="control">
-          <textarea
-            class="textarea is-focused"
-            placeholder="Focused textarea"
-            formControlName="Message"
-          ></textarea>
-        </div>
-        <div class="columns is-centered">
-          <button type="submit" class="button is-medium is-success">Send Message</button>
-        </div>
-      </form>
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <div class="columns is-vcentered">
+      <div class="column">
+        <form [formGroup]="MessageToSendForm" (ngSubmit)="SendMessage($event)">
+          <div class="control">
+            <textarea
+              class="textarea is-focused"
+              placeholder="Type message here"
+              formControlName="Message"
+            ></textarea>
+          </div>
+          <div class="control has-text-centered">
+            <button type="submit" class="button is-medium is-success">Send Message</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
   </div>
-</section>
+  <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+</div>

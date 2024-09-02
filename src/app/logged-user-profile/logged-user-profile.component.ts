@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { catchError, map, throwError } from 'rxjs';
+import { catchError, map, single, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-logged-user-profile',
@@ -15,6 +15,22 @@ import { catchError, map, throwError } from 'rxjs';
 })
 export class LoggedUserProfileComponent {
 
+  usernameSignal = signal('');
+  passwordSignal = signal('');
+  emailSignal = signal('');
+  regionSignal = signal('');
+  citySignal = signal('');
+  ageSignal = signal('');
+
+  usernameForm : String = "";
+  passwordForm : String = "";
+  emailForm : String = "";
+  regionForm : String = "";
+  cityForm : String = "";
+  ageForm : number = 0;
+
+  canSendForm : boolean = false;
+  cannotSendFormData : boolean = false;
   ProfilePhotoToSend : any;
   userdataform: FormGroup;
   region: any;
@@ -44,6 +60,11 @@ export class LoggedUserProfileComponent {
       age:loggedUserData.LoggedUser.Age,
       city:loggedUserData.LoggedUser.City
     })
+    this.usernameSignal.set(loggedUserData.LoggedUser.Username!);
+    this.emailSignal.set(loggedUserData.LoggedUser.Email!);
+    this.citySignal.set(loggedUserData.LoggedUser.City!);
+    this.ageSignal.set(loggedUserData.LoggedUser.Age?.toString()!);
+    this.regionSignal.set(loggedUserData.LoggedUser.Region!);
     const LId = loggedUserData.GetLoggedUserId();
     apiComm.GetUserImage(LId).subscribe(blob => {
       const url = window.URL.createObjectURL(blob);
@@ -74,6 +95,31 @@ export class LoggedUserProfileComponent {
     })
   }
 
+  assignUsername(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.usernameSignal.set(value);
+  }
+  assignPassword(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.passwordSignal.set(value);
+  }
+  assignEmail(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.emailSignal.set(value);
+  }
+  assignCity(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.citySignal.set(value);
+  }
+  assignAge(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.ageSignal.set(value);
+  }
+  assignRegion(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.regionSignal.set(value);
+  }
+
   CheckEmail(){
     this.apiComm.CheckIfEmailExists(this.userdataform.get('email')?.value).subscribe({
       next: (result) => {
@@ -96,31 +142,37 @@ export class LoggedUserProfileComponent {
   }
 
   SubmitData(event: Event): void{
-    event.preventDefault();
-    this.formData.set('Id', this.loggedUserData.GetLoggedUserId()),    
-    this.formData.set('Username', this.userdataform.get('username')?.value),
-    this.formData.set('Password', this.userdataform.get('password')?.value),
-    this.formData.set('Role', this.loggedUserData.GetLoggedUserRole()),
-    this.formData.set('Email', this.userdataform.get('email')?.value),
-    this.formData.set('Region', this.selectedWojewodztwo),
-    this.formData.set('Age', this.userdataform.get('age')?.value),
-    this.formData.set('City', this.userdataform.get('city')?.value)
-    this.apiComm.UpdateUserData(this.formData).subscribe({
-        next: (result) => {
-          const data = result.body;
-          this.loggedUserData.LoggedUser.Id = data.id;
-          this.loggedUserData.LoggedUser.Age = data.age;
-          this.loggedUserData.LoggedUser.City = data.city;
-          this.loggedUserData.LoggedUser.Email = data.email;
-          this.loggedUserData.LoggedUser.ProfilePhoto = data.profilePhotoPath;
-          this.loggedUserData.LoggedUser.Region = data.region;
-          this.loggedUserData.LoggedUser.Role = data.role;
-          this.loggedUserData.LoggedUser.Username = data.username;
-          this.loggedUserData.LoggedUserId = data.id;
-          this.loggedUserData.LoggedUserRole = data.role;
-        }
-      })
-      this.router1.navigate(['/Dashboard']);
+    if(this.usernameSignal() == '' || this.passwordSignal() == '' || this.emailSignal() == '' || this.citySignal() == '' || this.ageSignal() == '' || this.regionSignal() == ''){
+      this.cannotSendFormData = true;
+    }
+    else{
+      event.preventDefault();
+      this.cannotSendFormData = false;
+      this.formData.set('Id', this.loggedUserData.GetLoggedUserId()),    
+      this.formData.set('Username', this.userdataform.get('username')?.value),
+      this.formData.set('Password', this.userdataform.get('password')?.value),
+      this.formData.set('Role', this.loggedUserData.GetLoggedUserRole()),
+      this.formData.set('Email', this.userdataform.get('email')?.value),
+      this.formData.set('Region', this.selectedWojewodztwo),
+      this.formData.set('Age', this.userdataform.get('age')?.value),
+      this.formData.set('City', this.userdataform.get('city')?.value)
+      this.apiComm.UpdateUserData(this.formData).subscribe({
+          next: (result) => {
+            const data = result.body;
+            this.loggedUserData.LoggedUser.Id = data.id;
+            this.loggedUserData.LoggedUser.Age = data.age;
+            this.loggedUserData.LoggedUser.City = data.city;
+            this.loggedUserData.LoggedUser.Email = data.email;
+            this.loggedUserData.LoggedUser.ProfilePhoto = data.profilePhotoPath;
+            this.loggedUserData.LoggedUser.Region = data.region;
+            this.loggedUserData.LoggedUser.Role = data.role;
+            this.loggedUserData.LoggedUser.Username = data.username;
+            this.loggedUserData.LoggedUserId = data.id;
+            this.loggedUserData.LoggedUserRole = data.role;
+          }
+        })
+        this.router1.navigate(['/Dashboard']);
+    }
 
   }
 

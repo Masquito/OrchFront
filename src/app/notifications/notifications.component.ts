@@ -52,9 +52,9 @@ export class NotificationsComponent implements OnInit{
         console.log(result);
       }
     })
-
+    const idk = Id;
     this.powiadomienia.forEach((element: any, index : number) => {
-      if(element.id == Id){
+      if(element.notification.id == idk){
         this.powiadomienia.splice(index, 1);
       }
     });

@@ -1,0 +1,17 @@
+i {
+    font-size: 40px;
+}
+
+.box {
+    background-color: #F7F7F7;
+    font-size: large;
+    width: 700px;
+}
+
+.input{
+    background-color: #F7F7F7;
+    font-size: large;
+    width: 500px;
+    height: 70px;
+    margin-bottom: 20px;
+}

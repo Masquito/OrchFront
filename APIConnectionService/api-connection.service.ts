@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Host, Injectable } from '@angular/core';
 import { User } from '../Models/user';
 import { TokenContainerService } from '../AuthGuardService/token-container.service';
 
@@ -17,9 +17,11 @@ export class APIConnectionService {
   NotificationsControllerDeleteNotificationUrl = 'https://localhost:7023/api/Notifications/DeleteNotification';
   UsersUpdateDataControllerUrl = 'https://localhost:7023/api/Users/updatedata';
   UsersGetIamgeControllerUrl = 'https://localhost:7023/api/Users/getuserphoto';
+  UsersSendNotificationWhenProfileVisitedUrl = 'https://localhost:7023/api/Users/addnotificationwhenprofilevisited';
   UsersGetUserByIdUrl = 'https://localhost:7023/api/Users/getuserbyid';
   UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
   MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
+  MessagesGetAllForUserWithFilter = 'https://localhost:7023/api/Messages/GetAllUserMessagessWithFilter';
   MessagesSendUserMessage = 'https://localhost:7023/api/Messages/reciveMessageSendByUserToUser';
   UsersCheckIfUsernameExists = 'https://localhost:7023/api/Users/checkifusernameexists';
   UsersCheckIfEmailExists = 'https://localhost:7023/api/Users/checkifemailexists';
@@ -30,6 +32,14 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.UsersGetUserByIdUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  SendNotoficationWhenProfileVisited(VisitorId : any, HostId : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.UsersSendNotificationWhenProfileVisitedUrl, {VisitorId, HostId}, {observe: 'response', headers: headers })
   }
 
   cleanExcessNotifications(){
@@ -78,6 +88,14 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post(this.UsersGetIamgeControllerUrl, {Id}, {headers: headers, responseType: 'blob' })
+  }
+
+  GetAllUserMessagesWithFilter(formdata: FormData){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.MessagesGetAllForUserWithFilter, formdata, {observe: 'response', headers: headers })
   }
 
   GetAllUserMessages(Id : any){

@@ -1,38 +1,47 @@
-<section class="section">
-        <div class="container">
-            <div class="columns is-vcentered">
-                <div class="column has-text-centered">
-                    <img id="image" alt="Your Image" width="200px" height="200px"><br><br>
-                    <div class="box">{{userToView.Username}}</div>
-                    <div class="box">{{userToView.Age}}</div>
-                    <div class="box">{{userToView.Region}}</div>
-                    <div class="box">{{userToView.City}}</div>
-                </div>
-            </div>
-        </div>     
-</section>
-<section class="section">
-  <a class="level-item" aria-label="retweet" (click)="switchVis()">
-    <span class="icon is-small" (click)="switchVis()">
-      <i class="fa fas fa-envelope" aria-hidden="true" (click)="switchVis()"></i>
-    </span>
-  </a>
-  <div class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-      <form [formGroup]="MessageToSendForm" (ngSubmit)="SubmitData($event)">
-        <div class="control">
-          <textarea
-            class="textarea is-focused"
-            placeholder="Focused textarea"
-            formControlName="Message"
-          ></textarea>
+<div class="hero is-fullheight-with-navbar is-dark">
+  <div class="container">
+    <div class="columns is-vcentered">
+        <div class="column has-text-centered">
+            <br><br><img id="image" alt="Your Image" width="300px" height="300px"><br><br><br>
+            <label class="label has-text-white">Username</label>
+            <input id="Unameinput" class="input is-hovered is-rounded is-link has-text-centered" type="text" placeholder="Username" [value]="userToView.Username" readonly>
+            <label class="label has-text-white">Username</label>
+            <input id="Ageinput"  class="input is-hovered is-rounded is-link has-text-centered" type="text" placeholder="Username" [value]="userToView.Age" readonly>        
+            <label class="label has-text-white">Username</label>   
+            <input id="Regioninput" class="input is-hovered is-rounded is-link has-text-centered" type="text" placeholder="Username" [value]="userToView.Region" readonly>     
+            <label class="label has-text-white">Username</label>   
+            <input id="Cityinput" class="input is-hovered is-rounded is-link has-text-centered" type="text" placeholder="Username" [value]="userToView.City" readonly><br>
+                    
+            <a>
+              <i class="fa fas fa-envelope" aria-hidden="true" (click)="switchVis()"></i>
+            </a>
         </div>
-        <div class="columns is-centered">
-          <button type="submit" class="button is-medium is-success">Send Message</button>
-        </div>
-      </form>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+  </div> 
+</div>    
+
+
+
+
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <div class="columns is-vcentered">
+      <div class="column">
+        <form [formGroup]="MessageToSendForm" (ngSubmit)="SubmitData($event)">
+          <div class="control">
+            <textarea
+              class="textarea is-focused"
+              placeholder="Type message here"
+              formControlName="Message"
+            ></textarea>
+          </div>
+          <div class="control has-text-centered">
+            <button type="submit" class="button is-medium is-success">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</section>
+  <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+</div>

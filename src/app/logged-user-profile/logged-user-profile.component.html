@@ -6,7 +6,7 @@
                 <div class="field">
                   <label class="label has-text-white">Username</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input id="Unameinput" formControlName="username" class="input is-hovered is-rounded is-link" type="text" placeholder="Username" (blur)="CheckUsername()">
+                    <input id="Unameinput" formControlName="username" [value]="usernameSignal()" (keyup)="assignUsername($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="Username" (blur)="CheckUsername()">
                     <span class="icon is-small is-left">
                       <i class="fa fas fa-user"></i>
                     </span>
@@ -19,7 +19,7 @@
                 <div class="field">
                   <label class="label has-text-white">Password</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input formControlName="password" class="input is-hovered is-rounded is-link" type="password" placeholder="Password">
+                    <input formControlName="password" [value]="passwordSignal()" (keyup)="assignPassword($event)" class="input is-hovered is-rounded is-link" type="password" placeholder="Password">
                     <span class="icon is-small is-left">
                       <i class="fa fas fa-key"></i>
                     </span>
@@ -28,7 +28,7 @@
                   <div class="field">
                     <label class="label has-text-white">Email</label>
                     <div class="control has-icons-left has-icons-right">
-                      <input formControlName="email" class="input is-hovered is-rounded is-link" type="email" placeholder="Email" (blur)="CheckEmail()">
+                      <input formControlName="email" [value]="emailSignal()" (keyup)="assignEmail($event)" class="input is-hovered is-rounded is-link" type="email" placeholder="Email" (blur)="CheckEmail()">
                       <span class="icon is-small is-left">
                         <i class="fa fas fa-envelope"></i>
                       </span>
@@ -43,7 +43,8 @@
                 <br><br><br><br><br><br>
                 <img id="image" alt="Your Image"><br><br>
                 <input formControlName="photo" type="file" (change)="onFileSelected($event)"><br><br><br>
-                <button type="submit" class="button is-medium is-success">Update Data</button>
+                <button id="submitbtn" type="submit" class="button is-medium is-success">Update Data</button>
+                <p class="help is-danger" *ngIf="cannotSendFormData">Fill all fields</p>
               </div>
               <div class="column has-text-centered">
                   <div class="column has-text-centered">
@@ -51,7 +52,7 @@
                       <label class="label has-text-white">Region</label>
                       <div class="control">
                         <div class="select is-hovered is-rounded is-link">
-                          <select [(ngModel)]="selectedWojewodztwo" [ngModelOptions]="{standalone: true}">
+                          <select [(ngModel)]="selectedWojewodztwo" [ngModelOptions]="{standalone: true}" [value]="regionSignal()" (keyup)="assignRegion($event)">
                               <option *ngFor="let c of wojewodztwa" [ngValue]="c">{{c}}</option>
                             </select>
                         </div>
@@ -60,7 +61,7 @@
                         <div class="field">
                           <label class="label has-text-white">Age</label>
                           <div class="control has-icons-left has-icons-right">
-                            <input formControlName="age" class="input is-hovered is-rounded is-link" type="text" placeholder="Age">
+                            <input formControlName="age" [value]="ageSignal()" (keyup)="assignAge($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="Age">
                             <span class="icon is-small is-left">
                               <i class="fa fas fa-id-card-o"></i>
                             </span>
@@ -69,7 +70,7 @@
                         <div class="field">
                           <label class="label has-text-white">City</label>
                           <div class="control has-icons-left has-icons-right">
-                            <input formControlName="city" class="input is-hovered is-rounded is-link" type="text" placeholder="City">
+                            <input formControlName="city" [value]="citySignal()" (keyup)="assignCity($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="City">
                             <span class="icon is-small is-left">
                               <i class="fa fas fa-building"></i>
                             </span>

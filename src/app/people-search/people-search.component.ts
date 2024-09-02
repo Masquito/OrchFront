@@ -72,6 +72,7 @@ export class PeopleSearchComponent{
       }
     });
     
+    this.apiComm.SendNotoficationWhenProfileVisited(this.loggedUserData.LoggedUser.Id, Id).subscribe();
   }
 
   SubmitData(event: Event): void{

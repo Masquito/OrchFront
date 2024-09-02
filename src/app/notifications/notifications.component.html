@@ -1,9 +1,9 @@
- <section class="hero is-fullheight-with-navbar">
+ <section class="hero is-dark is-fullheight-with-navbar">
     <div class="columns">
         <div class="column is-one-third is-offset-one-third">
             @for (notka of powiadomienia; track notka) {
-                <div class="notification is-dark has-text-white">
-                    <button class="delete" (click)="DeleteNotification(notka.id)"></button>
+                <div class="notification is-light">
+                    <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
                     {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
                 </div>
             }

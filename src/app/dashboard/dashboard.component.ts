@@ -16,4 +16,6 @@ export class DashboardComponent {
 
     apiComm.cleanExcessNotifications().subscribe();
   }
+
+  
 }
