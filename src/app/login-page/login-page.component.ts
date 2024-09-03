@@ -1,16 +1,18 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../../Models/user';
 import { AppComponent } from '../app.component';
 import { catchError, map, tap, throwError } from 'rxjs';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
+import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterOutlet, RouterLink, RouterModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
