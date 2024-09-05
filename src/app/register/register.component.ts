@@ -30,12 +30,21 @@ export class RegisterComponent {
   cityForm : String = "";
   ageForm : number = 0;
 
+  usernameIcon : boolean = true;
+  emailIcon : boolean = true;
+  passwordIcon : boolean = true;
+  ageIcon : boolean = true;
+  cityIcon : boolean = true;
+
   cannotSendFormData : boolean = false;
   
   doesUsernameExists : boolean = false;
-  usernameIcon : boolean = true;
-  emailIcon : boolean = true;
+  isUsernameEmpty : boolean = false;
   doesEmailExist : boolean = false;
+  isEmailProper : boolean = true;
+  ispasswordProper : boolean = true;
+  isCityProper : boolean = true;
+  isAgeProper : boolean = true;
   registeredUser : User = {};
   registerForm!: FormGroup;
   selectedWojewodztwo : string = '';
@@ -83,6 +92,46 @@ export class RegisterComponent {
     this.regionSignal.set(value);
   }
 
+  CheckPassword(){
+    const value = this.passwordSignal();
+    const hasNumber = value.match("[0-9]+");
+    const hasSpecialChar = value.match("[^A-Za-z0-9]");
+    if(value.length < 8 || hasNumber?.length == null || hasSpecialChar?.length == null){
+      this.passwordIcon = true;
+      this.ispasswordProper = false;
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+    }
+    if(value.length >= 8 && hasNumber?.length != null && hasSpecialChar?.length != null){
+      this.passwordIcon = false;
+      this.ispasswordProper = true;
+      document.getElementById("btnsub")?.removeAttribute('disabled');
+    }
+  }
+
+  CheckAge(){
+    const value = this.ageSignal();
+    const isNaN = value.match("[^0-9]+");
+    if(isNaN?.length != null || value == ""){
+      this.ageIcon = true;
+      this.isAgeProper = false;
+    }
+    else{
+      this.ageIcon = false;
+      this.isAgeProper = true;
+    }
+  }
+
+  CheckCity(){
+    const value = this.citySignal();
+    if(value == ""){
+      this.cityIcon = true;
+      this.isCityProper = false;
+    }
+    else{
+      this.cityIcon = false;
+      this.isCityProper = true;
+    }
+  }
 
   Register(event : Event){
     const zmienne = new Array(this.usernameSignal(), this.passwordSignal(), this.emailSignal(), this.citySignal(), this.ageSignal().toString(), this.selectedWojewodztwo);
@@ -111,44 +160,72 @@ export class RegisterComponent {
   }
 
   CheckUsername(){
+    const value = this.usernameSignal();
+    if(value == ""){
+      this.isUsernameEmpty = true;
+      this.usernameIcon = true;
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+    }
+    else{
+      this.isUsernameEmpty = false;
+      this.usernameIcon = false;
+      document.getElementById("btnsub")?.removeAttribute('disabled');
+    }
     this.apicomm.CheckIfUsernameExists(this.registerForm.get('Username')?.value).subscribe({
       next: (result) => {
         const data = result.body;
-        this.doesUsernameExists = data;
-        if(this.loggedUserData.LoggedUser.Username == this.registerForm.get('Username')?.value){
-          this.doesUsernameExists = false;
-        }
         if(data == false){
-          this.usernameIcon = true;
-        }
-        else if(data == true && this.loggedUserData.LoggedUser.Username == this.registerForm.get('Username')?.value){
-          this.usernameIcon = true;
+          this.doesUsernameExists = false;
+          if(this.registerForm.get('Username')?.value == ""){
+            this.usernameIcon = true;
+          }
+          else{
+            this.usernameIcon = false;
+            document.getElementById("btnsub")?.removeAttribute('disabled');
+          }
         }
         else{
-          this.usernameIcon = false;
+          this.doesUsernameExists = true;
+          this.usernameIcon = true;
+          document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
         }
       }
     })
   }
 
   CheckEmail(){
-    this.apicomm.CheckIfEmailExists(this.registerForm.get('Email')?.value).subscribe({
-      next: (result) => {
-        const data = result.body;
-        this.doesEmailExist = data;
-        if(this.loggedUserData.LoggedUser.Email == this.registerForm.get('Email')?.value){
-          this.doesEmailExist = false;
+    const value = this.emailSignal();
+    const hasNumber = value.match("[@]");
+    const hasSpecialChar = value.match("[.]\\S+");
+    if(hasNumber?.length == null || hasSpecialChar?.length == null){
+      this.emailIcon = true;
+      this.isEmailProper = false
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+    }
+    if(hasNumber?.length != null && hasSpecialChar?.length != null){
+      this.emailIcon = false;
+      this.isEmailProper = true
+      document.getElementById("btnsub")?.removeAttribute('disabled');
+      this.apicomm.CheckIfEmailExists(this.registerForm.get('Email')?.value).subscribe({
+        next: (result) => {
+          const data = result.body;
+          if(data == false){
+            this.doesEmailExist = false;
+            if(this.registerForm.get('Email')?.value == ""){
+              this.emailIcon = true;
+            }
+            else{
+              this.emailIcon = false;
+            }
+            document.getElementById("btnsub")?.removeAttribute('disabled');
+          }
+          else{
+            this.doesEmailExist = true;
+            this.emailIcon = true;
+            document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+          }
         }
-        if(data == false){
-          this.emailIcon = true;
-        }
-        else if(data == true && this.loggedUserData.LoggedUser.Email == this.registerForm.get('Email')?.value){
-          this.emailIcon = true;
-        }
-        else{
-          this.emailIcon = false;
-        }
-      }
-    })
+      })
+    }
   }
 }
