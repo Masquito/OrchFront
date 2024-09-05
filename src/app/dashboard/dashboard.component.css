@@ -1,0 +1,17 @@
+.panel-block{
+    background-color: whitesmoke;
+    border-style: 10px solid;
+    border-color: black;
+}
+
+div.modal-card{
+    height: 300px;
+}
+
+textarea{
+    resize: none;
+}
+
+.title {
+    margin-top: -20%;
+}

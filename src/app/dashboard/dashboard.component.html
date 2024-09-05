@@ -6,9 +6,38 @@
     
                 </div>
                 <div class="column has-text-centered">
-                    <div class="card">
-                        COS
-                    </div>
+                  <h1 class="title">Latest 5 messages</h1>
+                  <h2 class="subtitle">
+                    Here will always be shown your last 5 messages
+                  </h2>
+                    <article class="panel">               
+                        @for (user of objectsToDisplay; track user) {
+                          <div class="panel-block is-block">
+                            <nav class="level">
+                              <div class="level-left">
+                                <figure class="image is-64x64">
+                                  <img class={{user.Username}} alt="Image" />
+                                </figure>
+                                <strong>{{user.Username}}</strong>
+                                {{user.MessageText}}
+                              </div>
+                              <div class="level-right">
+                                <a class="level-item">
+                                  <span class="icon is-small">
+                                    <i class="fa fas fa-envelope" aria-hidden="true" (click)="SendMSG(user.AuthorId)"></i>
+                                  </span>
+                                </a>
+                                <a class="level-item">
+                                  <span class="icon is-small">
+                                    <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.AuthorId)"></i>
+                                  </span>
+                                </a>
+                              </div>
+                            </nav>
+                          </div>
+                        }
+                        
+                      </article>
                 </div>
                 <div class="column has-text-centered">
                     
@@ -17,3 +46,28 @@
           </div>
       </div>
   </section>
+
+
+
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <div class="columns is-vcentered">
+        <div class="column">
+          <form [formGroup]="MessageToSendForm" (ngSubmit)="SendMessage($event)">
+            <div class="control">
+              <textarea
+                class="textarea is-focused"
+                placeholder="Type message here"
+                formControlName="Message"
+              ></textarea>
+            </div>
+            <div class="control has-text-centered">
+              <button type="submit" class="button is-medium is-success">Send Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+  </div>

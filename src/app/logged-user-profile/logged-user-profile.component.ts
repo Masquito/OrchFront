@@ -142,7 +142,7 @@ export class LoggedUserProfileComponent {
   }
 
   SubmitData(event: Event): void{
-    if(this.usernameSignal() == '' || this.passwordSignal() == '' || this.emailSignal() == '' || this.citySignal() == '' || this.ageSignal() == '' || this.regionSignal() == ''){
+    if(this.usernameSignal() == '' || this.passwordSignal() == '' || this.emailSignal() == '' || this.citySignal() == '' || this.ageSignal() == '' || this.selectedWojewodztwo == ''){
       this.cannotSendFormData = true;
     }
     else{

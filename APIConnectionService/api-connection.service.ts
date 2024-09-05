@@ -25,6 +25,7 @@ export class APIConnectionService {
   MessagesSendUserMessage = 'https://localhost:7023/api/Messages/reciveMessageSendByUserToUser';
   UsersCheckIfUsernameExists = 'https://localhost:7023/api/Users/checkifusernameexists';
   UsersCheckIfEmailExists = 'https://localhost:7023/api/Users/checkifemailexists';
+  MessagesGetLast5UserMessages = 'https://localhost:7023/api/Messages/GetLast5UserMessages';
 
   GetUserById(Id : any){
     const token = this.TC.getToken();
@@ -104,6 +105,14 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.MessagesGetAllForUser, {Id}, {observe: 'response', headers: headers })
+  }
+
+  GetLast5UserMessagess(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.MessagesGetLast5UserMessages, {Id}, {observe: 'response', headers: headers })
   }
 
   SendUserMessage(formdata: FormData){
