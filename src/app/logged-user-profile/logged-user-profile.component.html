@@ -15,15 +15,20 @@
                     </span>
                   </div>
                   <p class="help is-danger" *ngIf="doesUsernameExists">This username is already taken</p>
+                  <p class="help is-danger" *ngIf="isUsernameEmpty">Username must not be empty</p>
                 </div>
                 <div class="field">
                   <label class="label has-text-white">Password</label>
                   <div class="control has-icons-left has-icons-right">
-                    <input formControlName="password" [value]="passwordSignal()" (keyup)="assignPassword($event)" class="input is-hovered is-rounded is-link" type="password" placeholder="Password">
+                    <input formControlName="password" [value]="passwordSignal()" (keyup)="assignPassword($event)" class="input is-hovered is-rounded is-link" type="password" placeholder="Password" (blur)="CheckPassword()">
                     <span class="icon is-small is-left">
                       <i class="fa fas fa-key"></i>
                     </span>
+                    <span class="icon is-small is-right">
+                      <i class="fa fas fa-check" *ngIf="!passwordIcon"></i>
+                    </span>
                   </div>
+                  <p class="help is-danger" *ngIf="!isPasswordProper">Password must be minimum 8 characters long,<br> contain at least 1 digit and at least 1 special sign</p>
                 </div>
                   <div class="field">
                     <label class="label has-text-white">Email</label>
@@ -37,6 +42,7 @@
                       </span>
                     </div>
                     <p class="help is-danger" *ngIf="doesEmailExist">This email is already taken</p>
+                    <p class="help is-danger" *ngIf="!isEmailProper">Enter a proper email</p>
                   </div>
               </div>
               <div class="column has-text-centered">
@@ -61,20 +67,29 @@
                         <div class="field">
                           <label class="label has-text-white">Age</label>
                           <div class="control has-icons-left has-icons-right">
-                            <input formControlName="age" [value]="ageSignal()" (keyup)="assignAge($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="Age">
+                            <input formControlName="age" [value]="ageSignal()" (keyup)="assignAge($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="Age" (blur)="CheckAge()">
                             <span class="icon is-small is-left">
                               <i class="fa fas fa-id-card-o"></i>
                             </span>
+                            <span class="icon is-small is-right">
+                              <i class="fa fas fa-check" *ngIf="ageIcon"></i>
+                            </span>
                           </div>
+                          <p class="help is-danger" *ngIf="!isAgeProper">Age must be a number</p>
+                          <p class="help is-danger" *ngIf="isAgeEmpty">Age must not be empty</p>
                         </div>
                         <div class="field">
                           <label class="label has-text-white">City</label>
                           <div class="control has-icons-left has-icons-right">
-                            <input formControlName="city" [value]="citySignal()" (keyup)="assignCity($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="City">
+                            <input formControlName="city" [value]="citySignal()" (keyup)="assignCity($event)" class="input is-hovered is-rounded is-link" type="text" placeholder="City" (blur)="CheckCity()">
                             <span class="icon is-small is-left">
                               <i class="fa fas fa-building"></i>
                             </span>
+                            <span class="icon is-small is-right">
+                              <i class="fa fas fa-check" *ngIf="cityIcon"></i>
+                            </span>
                           </div>
+                          <p class="help is-danger" *ngIf="!isCityProper">Enter a proper city</p>
                         </div>
                   </div>
               </div>

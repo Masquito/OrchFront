@@ -61,6 +61,7 @@
                 <i class="fa fas fa-check" *ngIf="!ageIcon"></i>
               </span>
             </div>
+            <p class="help is-danger" *ngIf="isAgeEmpty">Age must not be empty</p>
             <p class="help is-danger" *ngIf="!isAgeProper">Age must be a number</p>
           </div>
           
@@ -82,14 +83,11 @@
             <label class="label has-text-white">Region</label>
             <div class="control has-icons-left has-icons-right">
               <div class="select is-hovered is-rounded is-link">
-                <select [(ngModel)]="selectedWojewodztwo" [ngModelOptions]="{standalone: true}" [value]="regionSignal()" (keyup)="assignRegion($event)">
+                <select [(ngModel)]="selectedWojewodztwo" [ngModelOptions]="{standalone: true}" [value]="regionSignal()" (change)="CheckRegion($event)">
                     <option *ngFor="let c of wojewodztwa" [ngValue]="c">{{c}}</option>
                   </select>
                   <span class="icon is-small is-left">
                     <i class="fa fas fa-solid fa-globe"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fas fa-check" *ngIf="!emailIcon"></i>
                   </span>
               </div>
             </div>

@@ -29,7 +29,20 @@ export class LoggedUserProfileComponent {
   cityForm : String = "";
   ageForm : number = 0;
 
+  passwordIcon : boolean = true;
+  ageIcon : boolean = true;
+  usernameIcon : boolean = true;
+  emailIcon : boolean = true;
+  cityIcon : boolean = true;
+
+  isPasswordProper : boolean = true;
+  isAgeProper : boolean = true;
+  isEmailProper : boolean = true;
+  isCityProper : boolean = true;
+
   canSendForm : boolean = false;
+  isUsernameEmpty : boolean = false;
+  isAgeEmpty : boolean = false;
   cannotSendFormData : boolean = false;
   ProfilePhotoToSend : any;
   userdataform: FormGroup;
@@ -38,8 +51,6 @@ export class LoggedUserProfileComponent {
   LoggedUserRole! : String;
   selectedWojewodztwo : any;
   doesUsernameExists : boolean = false;
-  usernameIcon : boolean = true;
-  emailIcon : boolean = true;
   doesEmailExist : boolean = false;
   wojewodztwa: string[] = ['Zachodnio-Pomorskie', 'Pomorskie', 'Warmińsko-Mazurskie',
                                   'Podlaskie', 'Mazowieckie', 'Kujawsko-Pomorskie',
@@ -74,25 +85,70 @@ export class LoggedUserProfileComponent {
 
 
   }
+
+  CheckPassword(){
+    const value = this.passwordSignal();
+    const hasNumber = value.match("[0-9]+");
+    const hasSpecialChar = value.match("[^A-Za-z0-9]");
+    if(value.length < 8 || hasNumber?.length == null || hasSpecialChar?.length == null){
+      this.passwordIcon = true;
+      this.isPasswordProper = false;
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    if(value.length >= 8 && hasNumber?.length != null && hasSpecialChar?.length != null){
+      this.passwordIcon = false;
+      this.isPasswordProper = true;
+      this.UnlockSubmitButton()
+    }
+  }
+
+  CheckCity(){
+    const value = this.citySignal();
+    if(value == ""){
+      this.cityIcon = false;
+      this.isCityProper = false;
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    else{
+      this.cityIcon = true;
+      this.isCityProper = true;
+      this.UnlockSubmitButton()
+    }
+  }
+
   CheckUsername(){
-    this.apiComm.CheckIfUsernameExists(this.userdataform.get('username')?.value).subscribe({
-      next: (result) => {
-        const data = result.body;
-        this.doesUsernameExists = data;
-        if(this.loggedUserData.LoggedUser.Username == this.userdataform.get('username')?.value){
-          this.doesUsernameExists = false;
+    const value = this.usernameSignal();
+    if(value == ""){
+      this.isUsernameEmpty = true;
+      this.usernameIcon = false;
+      this.doesUsernameExists = false;
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    else{
+      this.isUsernameEmpty = false;
+      this.usernameIcon = true;
+      this.apiComm.CheckIfUsernameExists(this.userdataform.get('username')?.value).subscribe({
+        next: (result) => {
+          const data = result.body;
+          this.doesUsernameExists = data;
+          if(this.loggedUserData.LoggedUser.Username == this.userdataform.get('username')?.value){
+            this.doesUsernameExists = false;
+            this.UnlockSubmitButton()
+          }
+          if(data == false){
+            this.usernameIcon = true;
+            this.UnlockSubmitButton()
+          }
+          else if(data == true && this.loggedUserData.LoggedUser.Username == this.userdataform.get('username')?.value){
+            this.usernameIcon = true;
+            this.UnlockSubmitButton()
+          }
+          else{
+            this.usernameIcon = false;
+          }
         }
-        if(data == false){
-          this.usernameIcon = true;
-        }
-        else if(data == true && this.loggedUserData.LoggedUser.Username == this.userdataform.get('username')?.value){
-          this.usernameIcon = true;
-        }
-        else{
-          this.usernameIcon = false;
-        }
-      }
-    })
+      })
+    }
   }
 
   assignUsername(event : Event){
@@ -121,24 +177,80 @@ export class LoggedUserProfileComponent {
   }
 
   CheckEmail(){
-    this.apiComm.CheckIfEmailExists(this.userdataform.get('email')?.value).subscribe({
-      next: (result) => {
-        const data = result.body;
-        this.doesEmailExist = data;
-        if(this.loggedUserData.LoggedUser.Email == this.userdataform.get('email')?.value){
-          this.doesEmailExist = false;
+    const value = this.emailSignal();
+    const hasNumber = value.match("[@]");
+    const hasSpecialChar = value.match("[.]\\S+");
+    if(hasNumber?.length == null || hasSpecialChar?.length == null){
+      this.emailIcon = false;
+      this.isEmailProper = false
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    if(hasNumber?.length != null && hasSpecialChar?.length != null){
+      this.emailIcon = true;
+      this.isEmailProper = true
+      this.apiComm.CheckIfEmailExists(this.userdataform.get('email')?.value).subscribe({
+        next: (result) => {
+          const data = result.body;
+          this.doesEmailExist = data;
+          if(this.loggedUserData.LoggedUser.Email == this.userdataform.get('email')?.value){
+            this.doesEmailExist = false;
+            this.UnlockSubmitButton()
+          }
+          if(this.doesEmailExist == true){
+            document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+          }
+          if(data == false){
+            this.emailIcon = true;
+            this.UnlockSubmitButton()
+          }
+          else if(data == true && this.loggedUserData.LoggedUser.Email == this.userdataform.get('email')?.value){
+            this.emailIcon = true;
+            this.UnlockSubmitButton()
+          }
+          else{
+            this.emailIcon = false;
+          }
         }
-        if(data == false){
-          this.emailIcon = true;
-        }
-        else if(data == true && this.loggedUserData.LoggedUser.Email == this.userdataform.get('email')?.value){
-          this.emailIcon = true;
-        }
-        else{
-          this.emailIcon = false;
-        }
-      }
-    })
+      })
+    }
+  }
+
+  CheckAge(){
+    const value = this.ageSignal();
+    const isNaN = value.match("[^0-9]+");
+    if(isNaN?.length != null){
+      this.ageIcon = false;
+      this.isAgeProper = false;
+      this.isAgeEmpty = false;
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    else if(value == ""){
+      this.isAgeEmpty = true;
+      this.ageIcon = false;
+      this.isAgeProper = true;
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+    }
+    else{
+      this.ageIcon = true;
+      this.isAgeProper = true;
+      this.isAgeEmpty = false;
+      this.UnlockSubmitButton()
+    }
+  }
+
+  UnlockSubmitButton(){
+    if(this.usernameSignal() != '' && this.passwordSignal() != '' && this.emailSignal() != '' && this.citySignal() != '' && this.ageSignal() != '' && this.selectedWojewodztwo != '' && this.IsFormDoneCorrectly()){
+      document.getElementById("submitbtn")?.removeAttribute('disabled');
+    }
+  }
+
+  IsFormDoneCorrectly() : boolean {
+    if(!this.isAgeEmpty && !this.doesUsernameExists && !this.isUsernameEmpty && this.isPasswordProper && !this.doesEmailExist && this.isEmailProper && this.isAgeProper && this.isCityProper){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   SubmitData(event: Event): void{

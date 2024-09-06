@@ -41,6 +41,7 @@ export class RegisterComponent {
   doesUsernameExists : boolean = false;
   isUsernameEmpty : boolean = false;
   doesEmailExist : boolean = false;
+  isAgeEmpty : boolean = false;
   isEmailProper : boolean = true;
   ispasswordProper : boolean = true;
   isCityProper : boolean = true;
@@ -55,7 +56,6 @@ export class RegisterComponent {
                                         'Małopolskie', 'Śląskie', 'Opolskie',];
   constructor(private appComponent : AppComponent, private fb : FormBuilder, private apicomm : APIConnectionService, private router: Router, private loggedUserData : LoggedUserDataServiceService){
     appComponent.visible_nav = false;
-
     this.registerForm = this.fb.group({
       Username: [''],
       Password: [''],
@@ -87,10 +87,6 @@ export class RegisterComponent {
     const value = (event.target as HTMLInputElement).value;
     this.ageSignal.set(value);
   }
-  assignRegion(event : Event){
-    const value = (event.target as HTMLInputElement).value;
-    this.regionSignal.set(value);
-  }
 
   CheckPassword(){
     const value = this.passwordSignal();
@@ -104,20 +100,30 @@ export class RegisterComponent {
     if(value.length >= 8 && hasNumber?.length != null && hasSpecialChar?.length != null){
       this.passwordIcon = false;
       this.ispasswordProper = true;
-      document.getElementById("btnsub")?.removeAttribute('disabled');
+      this.UnlockSubmitButton()
     }
   }
 
   CheckAge(){
     const value = this.ageSignal();
     const isNaN = value.match("[^0-9]+");
-    if(isNaN?.length != null || value == ""){
+    if(isNaN?.length != null){
       this.ageIcon = true;
       this.isAgeProper = false;
+      this.isAgeEmpty = false;
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+    }
+    else if(value == ""){
+      this.isAgeEmpty = true;
+      this.ageIcon = true;
+      this.isAgeProper = true;
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
     }
     else{
       this.ageIcon = false;
       this.isAgeProper = true;
+      this.isAgeEmpty = false;
+      this.UnlockSubmitButton()
     }
   }
 
@@ -126,10 +132,12 @@ export class RegisterComponent {
     if(value == ""){
       this.cityIcon = true;
       this.isCityProper = false;
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
     }
     else{
       this.cityIcon = false;
       this.isCityProper = true;
+      this.UnlockSubmitButton()
     }
   }
 
@@ -169,7 +177,7 @@ export class RegisterComponent {
     else{
       this.isUsernameEmpty = false;
       this.usernameIcon = false;
-      document.getElementById("btnsub")?.removeAttribute('disabled');
+      this.UnlockSubmitButton()
     }
     this.apicomm.CheckIfUsernameExists(this.registerForm.get('Username')?.value).subscribe({
       next: (result) => {
@@ -181,7 +189,7 @@ export class RegisterComponent {
           }
           else{
             this.usernameIcon = false;
-            document.getElementById("btnsub")?.removeAttribute('disabled');
+            this.UnlockSubmitButton()
           }
         }
         else{
@@ -205,7 +213,7 @@ export class RegisterComponent {
     if(hasNumber?.length != null && hasSpecialChar?.length != null){
       this.emailIcon = false;
       this.isEmailProper = true
-      document.getElementById("btnsub")?.removeAttribute('disabled');
+      this.UnlockSubmitButton()
       this.apicomm.CheckIfEmailExists(this.registerForm.get('Email')?.value).subscribe({
         next: (result) => {
           const data = result.body;
@@ -217,7 +225,7 @@ export class RegisterComponent {
             else{
               this.emailIcon = false;
             }
-            document.getElementById("btnsub")?.removeAttribute('disabled');
+            this.UnlockSubmitButton()
           }
           else{
             this.doesEmailExist = true;
@@ -226,6 +234,33 @@ export class RegisterComponent {
           }
         }
       })
+    }
+  }
+
+  CheckRegion(event : Event){
+    const value = (event.target as HTMLInputElement).value;
+    this.regionSignal.set(value);
+    if(value == '' || value == ""){
+      document.getElementById("btnsub")?.setAttribute('disabled', 'disabled');
+    }
+    else{
+      this.UnlockSubmitButton();
+    }
+  }
+
+  UnlockSubmitButton(){
+    let xd = this.regionSignal();
+    if(this.usernameSignal() != '' && this.passwordSignal() != '' && this.emailSignal() != '' && this.citySignal() != '' && this.ageSignal() != '' && this.regionSignal() != '' && this.IsFormDoneCorrectly()){
+      document.getElementById("btnsub")?.removeAttribute('disabled');
+    }
+  }
+
+  IsFormDoneCorrectly() : boolean {
+    if(!this.isAgeEmpty && !this.doesUsernameExists && !this.isUsernameEmpty && this.ispasswordProper && !this.doesEmailExist && this.isEmailProper && this.isAgeProper && this.isCityProper){
+      return true;
+    }
+    else{
+      return false;
     }
   }
 }
