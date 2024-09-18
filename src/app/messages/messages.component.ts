@@ -72,6 +72,8 @@ export class MessagesComponent implements OnInit{
                 const url = window.URL.createObjectURL(blob);   
                 Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
                   item => item.setAttribute("src",url));
+                Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
+                  item => item.setAttribute("class",user.username + " is-rounded"));
               });
             }
           });
@@ -129,6 +131,8 @@ export class MessagesComponent implements OnInit{
                 const url = window.URL.createObjectURL(blob);   
                 Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
                   item => item.setAttribute("src",url));
+                Array.prototype.forEach.call(document.getElementsByClassName(user.username), 
+                  item => item.setAttribute("class",user.username + " is-rounded"));
               });
             }
           });

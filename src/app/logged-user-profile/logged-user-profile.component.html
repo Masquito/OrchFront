@@ -48,7 +48,8 @@
               <div class="column has-text-centered">
                 <br><br><br><br><br><br>
                 <img id="image" alt="Your Image"><br><br>
-                <input formControlName="photo" type="file" (change)="onFileSelected($event)"><br><br><br>
+                <input formControlName="photo" type="file" (change)="onFileSelected($event)">
+                <p class="help is-warning">For the best result use an image with fixed size otherwise it might be deformed</p><br><br><br>
                 <button id="submitbtn" type="submit" class="button is-medium is-success">Update Data</button>
                 <p class="help is-danger" *ngIf="cannotSendFormData">Fill all fields</p>
               </div>

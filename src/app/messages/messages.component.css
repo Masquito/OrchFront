@@ -2,6 +2,7 @@
     background-color: whitesmoke;
     border-style: 10px solid;
     border-color: black;
+    align-items: left;
 }
 
 div.modal-card{
@@ -10,4 +11,9 @@ div.modal-card{
 
 textarea{
     resize: none;
+}
+
+img{
+    height: 64px;
+    width: 64px;
 }

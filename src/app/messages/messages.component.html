@@ -14,27 +14,36 @@
 
         @for (user of objectsToDisplay; track user) {
           <div class="panel-block is-block">
-            <nav class="level">
-              <div class="level-left">
-                <figure class="image is-64x64">
-                  <img class={{user.Username}} alt="Image" />
+            <div class="columns is-vcentered">
+              <div class="column has-text-centered is-one-fifth">
+                <figure class="image is-inline-block">
+                  <img class={{user.Username}} alt="Image"/>
                 </figure>
+              </div>
+              <div class="column has-text-left">
                 <strong>{{user.Username}}</strong>
                 {{user.MessageText}}
               </div>
-              <div class="level-right">
-                <a class="level-item">
-                  <span class="icon is-small">
-                    <i class="fa fas fa-envelope" aria-hidden="true" (click)="SendMSG(user.AuthorId)"></i>
-                  </span>
-                </a>
-                <a class="level-item">
-                  <span class="icon is-small">
-                    <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.AuthorId)"></i>
-                  </span>
-                </a>
+              <div class="column has-icons-right has-text-right is-one-fifth">
+                <div class="columns is-vcentered">
+                  <div class="column"></div>
+                  <div class="column has-icons-left has-text-left is-two-fifth">
+                    <a>
+                      <span class="icon is-small" style="font-size: 25px;">
+                        <i class="fa fas fa-envelope" aria-hidden="true" (click)="SendMSG(user.AuthorId)"></i>
+                      </span>
+                    </a>
+                  </div>
+                  <div class="column has-icons-left has-text-left" >
+                    <a>
+                      <span class="icon is-small" style="font-size: 25px;">
+                        <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.AuthorId)"></i>
+                      </span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </nav>
+            </div>
           </div>
         }
         

@@ -15,3 +15,8 @@ textarea{
 .title {
     margin-top: -20%;
 }
+
+img{
+    height: 64px;
+    width: 64px;
+}

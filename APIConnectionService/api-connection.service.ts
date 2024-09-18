@@ -26,6 +26,7 @@ export class APIConnectionService {
   UsersCheckIfUsernameExists = 'https://localhost:7023/api/Users/checkifusernameexists';
   UsersCheckIfEmailExists = 'https://localhost:7023/api/Users/checkifemailexists';
   MessagesGetLast5UserMessages = 'https://localhost:7023/api/Messages/GetLast5UserMessages';
+  PaymentsCheck = 'https://localhost:7023/api/Payments/paymentcheck';
 
   GetUserById(Id : any){
     const token = this.TC.getToken();
@@ -33,6 +34,14 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.UsersGetUserByIdUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  PaymentsChecking(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.PaymentsCheck, {Id}, {observe: 'response', headers: headers })
   }
 
   SendNotoficationWhenProfileVisited(VisitorId : any, HostId : any){
