@@ -27,6 +27,8 @@ export class APIConnectionService {
   UsersCheckIfEmailExists = 'https://localhost:7023/api/Users/checkifemailexists';
   MessagesGetLast5UserMessages = 'https://localhost:7023/api/Messages/GetLast5UserMessages';
   PaymentsCheck = 'https://localhost:7023/api/Payments/paymentcheck';
+  PaymentsStoretxhash = 'https://localhost:7023/api/Payments/storetxhash';
+  PaymentsGettxhash = 'https://localhost:7023/api/Payments/gettxhash';
 
   GetUserById(Id : any){
     const token = this.TC.getToken();
@@ -34,6 +36,22 @@ export class APIConnectionService {
       'Authorization': `Bearer ${token}`
     });
     return this.http.post<any>(this.UsersGetUserByIdUrl, {Id}, {observe: 'response', headers: headers })
+  }
+
+  PaymentGettxhash(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.PaymentsGettxhash, {Id}, {observe: 'response', headers: headers })
+  }
+
+  PaymentStoretxhash(Id : any, City : string){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.PaymentsStoretxhash, {Id, City}, {observe: 'response', headers: headers })
   }
 
   PaymentsChecking(Id : any){

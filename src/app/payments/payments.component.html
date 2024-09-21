@@ -1,3 +1,15 @@
-<p>payments works!</p>
 
-<a (click)="showBalance()">click me</a>
+@if(this.loggedUserRole == "FUA"){
+    <h1 class="title">You already have full access to the Orchard</h1>
+    <h2 class="subtitle">Have a great time here!</h2>
+}
+@else if (this.loggedUserRole == "NFUA") {
+    <button class="button is-large" (click)="ConnectMetaMask()">Connect Metamask</button><br><br>
+    @if (account != null) {
+        <button class="button is-large" (click)="BuyFullAccess()">Buy full access to website</button>
+    }
+}
+@else {
+    <h1 class="title">Your transaction is pending</h1>
+    <h2 class="subtitle">You will recive information if it succedes</h2>
+}

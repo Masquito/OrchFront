@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { CommonModule } from '@angular/common';
 import { User } from '../../../Models/user';
 import { Router } from '@angular/router';
+import MetaMaskSDK from '@metamask/sdk';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit{
   MessageToSendForm: FormGroup;
   formDataMessage: FormData;
   currentUserToSendMessageTo : any;
+  ethereum : any;
 
   constructor(private router1 : Router, private fb : FormBuilder, private appC: AppComponent, private apiComm : APIConnectionService, private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService){
     appC.visible_nav = true;
@@ -34,6 +36,18 @@ export class DashboardComponent implements OnInit{
     })
 
     this.formDataMessage = new FormData();
+
+    const MMSDK = new MetaMaskSDK({
+      dappMetadata: {
+        name: "Orchard",
+        url: window.location.href,
+      },
+      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff",
+    });
+    setTimeout(() => {
+  
+      this.ethereum = MMSDK.getProvider();
+    }, 0);
   }
 
 
@@ -89,6 +103,51 @@ export class DashboardComponent implements OnInit{
         console.error('API Error:', error);
       }
     });
+
+    this.apiComm.PaymentGettxhash(this.LoggedUserData.LoggedUser.Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          alert("You don't have any Messagess");
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        const role = result.data.role;
+        if(role != "FUA" && role != "NFUA"){
+          this.WaitForTransactionConfirmation(role).then(ev => {
+            if(ev == 'confirmed'){
+              this.apiComm.PaymentStoretxhash(this.LoggedUserData.LoggedUser.Id, "FUA").subscribe(); //GIVE USER FULL ACCESS IF PAYMENT HAS BEED CONFIRMED
+            }
+          })
+        }
+
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
+  }
+
+  async WaitForTransactionConfirmation(txhash : string){
+    let loop = () => {
+      return this.ethereum.request({method: 'eth_getTransactionReceipt', params:[txhash]}).then((ev: any) => {
+        if(ev != null){
+          return 'confirmed';
+        }
+        else{
+          return loop();
+        }
+      })
+    }
+
+    return await loop();
   }
 
 
