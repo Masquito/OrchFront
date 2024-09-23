@@ -1,7 +1,19 @@
 
 @if(this.loggedUserRole == "FUA"){
-    <h1 class="title">You already have full access to the Orchard</h1>
-    <h2 class="subtitle">Have a great time here!</h2>
+    <section class="hero is-fullheight is-dark">
+        <div class="columns is-vcentered">
+            <div class="column">
+
+            </div>
+            <div class="column has-text-centered">
+                <h1 class="title">You already have full access to the Orchard</h1>
+                <h2 class="subtitle">Have a great time here!</h2>
+            </div>
+            <div class="column">
+                
+            </div>
+        </div>
+    </section>
 }
 @else if (this.loggedUserRole == "NFUA") {
     <button class="button is-large" (click)="ConnectMetaMask()">Connect Metamask</button><br><br>

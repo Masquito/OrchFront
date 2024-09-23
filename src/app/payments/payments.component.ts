@@ -12,23 +12,28 @@ import { MetaMaskSDK } from '@metamask/sdk';
   templateUrl: './payments.component.html',
   styleUrl: './payments.component.css'
 })
-export class PaymentsComponent{
+export class PaymentsComponent implements OnInit{
   account : any = null;
   ethereum : any;
   txhash : any = null;
   loggedUserRole : any;
+
   constructor(private loggeduserdata : LoggedUserDataServiceService, private apiconn : APIConnectionService){
     this.loggedUserRole = loggeduserdata.LoggedUser.Role;
+  }
+
+  ngOnInit(): void {
     const MMSDK = new MetaMaskSDK({
       dappMetadata: {
         name: "Orchard",
         url: window.location.href,
       },
-      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff",
+      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff", 
     });
     setTimeout(() => {
-  
-      this.ethereum = MMSDK.getProvider();
+      MMSDK.init().then(() => {
+        this.ethereum = MMSDK.getProvider();
+      });
     }, 0);
   }
 
@@ -41,13 +46,13 @@ export class PaymentsComponent{
   }
 
   async ConnectMetaMask(){
-    await this.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts : any) => {
-      this.account = accounts[0];
-      console.log(this.account);
-    });
+      await this.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts : any) => {    //TO DZIAŁA BEZ ZARZUTU
+        this.account = accounts[0];
+        console.log(this.account);
+      });
   };
 
-  async BuyFullAccess(){
+  async BuyFullAccess(){     //TO DZIAŁA BEZ ZARZUTU
     let transactionDetails = {
       to: '0x40496e2d5a48779a2721e6effa5be7a7a9caa151',
       from: this.account,
