@@ -13,7 +13,7 @@ textarea{
     resize: none;
 }
 
-img{
+figure > img{
     height: 64px;
     width: 64px;
 }

@@ -50,6 +50,7 @@ export class LoggedUserProfileComponent {
   formData! : FormData;
   LoggedUserRole! : String;
   selectedWojewodztwo : any;
+  showNotFullUserMessage : boolean = false
   doesUsernameExists : boolean = false;
   doesEmailExist : boolean = false;
   wojewodztwa: string[] = ['Zachodnio-Pomorskie', 'Pomorskie', 'Warmińsko-Mazurskie',
@@ -82,8 +83,6 @@ export class LoggedUserProfileComponent {
       const img = document.getElementById('image') as HTMLImageElement;
       img.src = url;
     });
-
-
   }
 
   CheckPassword(){
@@ -254,36 +253,42 @@ export class LoggedUserProfileComponent {
   }
 
   SubmitData(event: Event): void{
-    if(this.usernameSignal() == '' || this.passwordSignal() == '' || this.emailSignal() == '' || this.citySignal() == '' || this.ageSignal() == '' || this.selectedWojewodztwo == ''){
-      this.cannotSendFormData = true;
+    if(this.loggedUserData.LoggedUserRole != "FUA"){
+      document.getElementById("submitbtn")?.setAttribute('disabled', 'disabled');
+      this.showNotFullUserMessage = true;
     }
     else{
-      event.preventDefault();
-      this.cannotSendFormData = false;
-      this.formData.set('Id', this.loggedUserData.GetLoggedUserId()),    
-      this.formData.set('Username', this.userdataform.get('username')?.value),
-      this.formData.set('Password', this.userdataform.get('password')?.value),
-      this.formData.set('Role', this.loggedUserData.GetLoggedUserRole()),
-      this.formData.set('Email', this.userdataform.get('email')?.value),
-      this.formData.set('Region', this.selectedWojewodztwo),
-      this.formData.set('Age', this.userdataform.get('age')?.value),
-      this.formData.set('City', this.userdataform.get('city')?.value)
-      this.apiComm.UpdateUserData(this.formData).subscribe({
-          next: (result) => {
-            const data = result.body;
-            this.loggedUserData.LoggedUser.Id = data.id;
-            this.loggedUserData.LoggedUser.Age = data.age;
-            this.loggedUserData.LoggedUser.City = data.city;
-            this.loggedUserData.LoggedUser.Email = data.email;
-            this.loggedUserData.LoggedUser.ProfilePhoto = data.profilePhotoPath;
-            this.loggedUserData.LoggedUser.Region = data.region;
-            this.loggedUserData.LoggedUser.Role = data.role;
-            this.loggedUserData.LoggedUser.Username = data.username;
-            this.loggedUserData.LoggedUserId = data.id;
-            this.loggedUserData.LoggedUserRole = data.role;
-          }
-        })
-        this.router1.navigate(['/Dashboard']);
+      if(this.usernameSignal() == '' || this.passwordSignal() == '' || this.emailSignal() == '' || this.citySignal() == '' || this.ageSignal() == '' || this.selectedWojewodztwo == ''){
+        this.cannotSendFormData = true;
+      }
+      else{
+        event.preventDefault();
+        this.cannotSendFormData = false;
+        this.formData.set('Id', this.loggedUserData.GetLoggedUserId()),    
+        this.formData.set('Username', this.userdataform.get('username')?.value),
+        this.formData.set('Password', this.userdataform.get('password')?.value),
+        this.formData.set('Role', this.loggedUserData.GetLoggedUserRole()),
+        this.formData.set('Email', this.userdataform.get('email')?.value),
+        this.formData.set('Region', this.selectedWojewodztwo),
+        this.formData.set('Age', this.userdataform.get('age')?.value),
+        this.formData.set('City', this.userdataform.get('city')?.value)
+        this.apiComm.UpdateUserData(this.formData).subscribe({
+            next: (result) => {
+              const data = result.body;
+              this.loggedUserData.LoggedUser.Id = data.id;
+              this.loggedUserData.LoggedUser.Age = data.age;
+              this.loggedUserData.LoggedUser.City = data.city;
+              this.loggedUserData.LoggedUser.Email = data.email;
+              this.loggedUserData.LoggedUser.ProfilePhoto = data.profilePhotoPath;
+              this.loggedUserData.LoggedUser.Region = data.region;
+              this.loggedUserData.LoggedUser.Role = data.role;
+              this.loggedUserData.LoggedUser.Username = data.username;
+              this.loggedUserData.LoggedUserId = data.id;
+              this.loggedUserData.LoggedUserRole = data.role;
+            }
+          })
+          this.router1.navigate(['/Dashboard']);
+      }
     }
 
   }

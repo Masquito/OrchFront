@@ -4,6 +4,7 @@ import { APIConnectionService } from '../../../APIConnectionService/api-connecti
 import { subscribe } from 'diagnostics_channel';
 import { CommonModule } from '@angular/common';
 import { MetaMaskSDK } from '@metamask/sdk';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payments',
@@ -64,6 +65,9 @@ export class PaymentsComponent implements OnInit{
     })
 
     this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe();
+    this.loggeduserdata.LoggedUserRole = this.txhash;
+    this.loggeduserdata.LoggedUser.Role = this.txhash;
+    this.loggedUserRole = this.txhash;
   }
 }
 

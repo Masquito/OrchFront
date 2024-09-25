@@ -56,9 +56,6 @@ export class DashboardComponent implements OnInit{
     this.apiConn.GetLast5UserMessagess(ID)
     .pipe(
       catchError(error => {
-        if (error.status === 404) {
-          alert("You don't have any Messagess");
-        }
         return throwError(() => new Error("Error occured"));
       }),
       map((response) => {
@@ -107,9 +104,6 @@ export class DashboardComponent implements OnInit{
     this.apiComm.PaymentGettxhash(this.LoggedUserData.LoggedUser.Id)
     .pipe(
       catchError(error => {
-        if (error.status === 404) {
-          alert("You don't have any Messagess");
-        }
         return throwError(() => new Error("Error occured"));
       }),
       map((response) => {
@@ -124,6 +118,8 @@ export class DashboardComponent implements OnInit{
           this.WaitForTransactionConfirmation(role).then(ev => {
             if(ev == 'confirmed'){
               this.apiComm.PaymentStoretxhash(this.LoggedUserData.LoggedUser.Id, "FUA").subscribe(); //GIVE USER FULL ACCESS IF PAYMENT HAS BEED CONFIRMED
+              this.LoggedUserData.LoggedUserRole = "FUA";
+              this.LoggedUserData.LoggedUser.Role = "FUA";
             }
           })
         }

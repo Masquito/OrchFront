@@ -52,6 +52,7 @@
                 <p class="help is-warning">For the best result use an image with fixed size otherwise it might be deformed</p><br><br><br>
                 <button id="submitbtn" type="submit" class="button is-medium is-success">Update Data</button>
                 <p class="help is-danger" *ngIf="cannotSendFormData">Fill all fields</p>
+                <p class="help is-danger" *ngIf="showNotFullUserMessage">Editing a profile is available only to full access users</p>
               </div>
               <div class="column has-text-centered">
                   <div class="column has-text-centered">

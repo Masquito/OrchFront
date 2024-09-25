@@ -1,12 +1,68 @@
- <section class="hero is-dark is-fullheight-with-navbar">
-    <div class="columns">
-        <div class="column is-one-third is-offset-one-third">
-            @for (notka of powiadomienia; track notka) {
-                <div class="notification is-light">
-                    <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
-                    {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
+ @if(isFullAccess){
+    @if(canBeShown == 2){
+        <section class="hero is-dark is-fullheight-with-navbar">
+            <div class="columns">
+                <div class="column is-one-third is-offset-one-third">
+                    @for (notka of powiadomienia; track notka) {
+                        <div class="notification is-light">
+                            <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
+                            {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
+                            <a>
+                                <span class="icon is-small">
+                                    <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(notka.notification.authorId)"></i>
+                                </span>
+                            </a>
+                        </div>
+                    }
                 </div>
-            }
+                </div>
+            </section>
+     }
+     @else if (canBeShown == 1){
+        <section class="hero is-dark is-fullheight-with-navbar">
+            <div class="columns is-vcentered has-text-centered">
+                <div class="column">
+    
+                </div>
+                <div class="column">
+                    <img src="assets/images/banernonotki.png" width="80%" height="80%" alt="empty">
+                </div>
+                <div class="column">
+    
+                </div>
+            </div>
+        </section>
+     }
+     @else {
+        <section class="hero is-dark is-fullheight-with-navbar">
+            <div class="columns is-vcentered has-text-centered">
+                <div class="column">
+    
+                </div>
+                <div class="column">
+    
+                </div>
+                <div class="column">
+    
+                </div>
+            </div>
+        </section>
+     }
+ }
+ @else {
+    <section class="hero is-dark is-fullheight-with-navbar">
+        <div class="columns is-vcentered has-text-centered">
+            <div class="column">
+
+            </div>
+            <div class="column">
+                <p class="help is-danger">Notifications are available only to full access users</p>
+            </div>
+            <div class="column">
+
+            </div>
         </div>
-      </div>
-  </section>
+    </section>
+ }
+ 
+ 

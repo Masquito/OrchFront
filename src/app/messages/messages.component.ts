@@ -23,6 +23,7 @@ export class MessagesComponent implements OnInit{
   MessageToSendForm: FormGroup;
   currentUserToSendMessageTo : any;
   formDataMessage! : FormData;
+  canBeShown : number = 0;
   filter = signal('');
 
   constructor(private fb : FormBuilder, private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService, private router1 : Router){
@@ -39,7 +40,7 @@ export class MessagesComponent implements OnInit{
     .pipe(
       catchError(error => {
         if (error.status === 404) {
-          alert("You don't have any Messagess");
+          this.canBeShown = 1;
         }
         return throwError(() => new Error("Error occured"));
       }),
@@ -50,6 +51,7 @@ export class MessagesComponent implements OnInit{
     )
     .subscribe({
       next: (result) => {
+        this.canBeShown = 2;
         this.messagess = result.data.messages;
         this.users = result.data.users;  
         this.messagess.forEach((message: { authorId: any; content: any; sendDate: Date;}) => {
@@ -98,7 +100,7 @@ export class MessagesComponent implements OnInit{
     .pipe(
       catchError(error => {
         if (error.status === 404) {
-          alert("You don't have any Messagess");
+          this.canBeShown = 1;
         }
         return throwError(() => new Error("Error occured"));
       }),
@@ -109,6 +111,7 @@ export class MessagesComponent implements OnInit{
     )
     .subscribe({
       next: (result) => {
+        this.canBeShown = 2;
         this.messagess = result.data.messages;
         this.users = result.data.users;  
         this.messagess.forEach((message: { authorId: any; content: any; sendDate: Date;}) => {

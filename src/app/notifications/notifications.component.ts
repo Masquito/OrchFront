@@ -5,6 +5,7 @@ import { catchError, map, throwError } from 'rxjs';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { User } from '../../../Models/user';
 import { NotificationMy } from '../../../Models/Notification';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
@@ -15,9 +16,15 @@ import { NotificationMy } from '../../../Models/Notification';
 })
 export class NotificationsComponent implements OnInit{
 
+  canBeShown : number = 0;
   powiadomienia = new Array();
   LogedUser! : User;
-  constructor(private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService){}
+  isFullAccess : boolean = false;
+  constructor(private apiConn : APIConnectionService, private LoggedUserData : LoggedUserDataServiceService, private router1 : Router){
+    if(LoggedUserData.LoggedUser.Role == "FUA"){
+      this.isFullAccess = true;
+    }
+  }
 
   ngOnInit() {
     const ID = this.LoggedUserData.GetLoggedUserId();
@@ -25,7 +32,7 @@ export class NotificationsComponent implements OnInit{
     .pipe(
       catchError(error => {
         if (error.status === 404) {
-          alert("You don't have any Notifications");
+          this.canBeShown = 1;
         }
         return throwError(() => new Error("Error occured"));
       }),
@@ -39,6 +46,8 @@ export class NotificationsComponent implements OnInit{
     )
     .subscribe({
       next: (result) => {
+        this.canBeShown = 2;
+        console.log(result);
       },
       error: (error) => {
         console.error('API Error:', error);
@@ -58,5 +67,44 @@ export class NotificationsComponent implements OnInit{
         this.powiadomienia.splice(index, 1);
       }
     });
+    if(this.powiadomienia.length == 0){
+      this.canBeShown = 1;
+    }
+  }
+
+  SeeUserProfile(Id : string): void {
+    this.apiConn.GetUserById(Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          alert("Nie znaleziono użytkownika");
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        const user : User = {
+          Id: data.userToReturn.id,
+          Username: data.userToReturn.username,
+          Email: data.userToReturn.email,
+          Role: data.userToReturn.role,
+          Age: data.userToReturn.age,
+          Region: data.userToReturn.region,
+          City: data.userToReturn.city,
+        };
+        this.LoggedUserData.UserToProfileView = user;
+        return { user };
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        this.router1.navigate(['/BrowseUsers']);
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
+    
+    this.apiConn.SendNotoficationWhenProfileVisited(this.LoggedUserData.LoggedUser.Id, Id).subscribe();
   }
 }

@@ -1,57 +1,88 @@
-<div class="hero is-fullheight-with-navbar is-dark">
-  <div class="columns">
-    <div class="column is-one-third is-offset-one-third">
-      <article class="panel">
-
-        <div class="panel-block">
-          <p class="control has-icons-left">
-            <input class="input is-hovered is-rounded is-link" type="text" placeholder="Filter by username" [value]="filter()" (keyup)="FilterMessages($event)"/>
-            <span class="icon is-left">
-              <i class="fa fas fa-search" aria-hidden="true"></i>
-            </span>
-          </p>
-        </div>
-
-        @for (user of objectsToDisplay; track user) {
-          <div class="panel-block is-block">
-            <div class="columns is-vcentered">
-              <div class="column has-text-centered is-one-fifth">
-                <figure class="image is-inline-block">
-                  <img class={{user.Username}} alt="Image"/>
-                </figure>
-              </div>
-              <div class="column has-text-left">
-                <strong>{{user.Username}}</strong>
-                {{user.MessageText}}
-              </div>
-              <div class="column has-icons-right has-text-right is-one-fifth">
-                <div class="columns is-vcentered">
-                  <div class="column"></div>
-                  <div class="column has-icons-left has-text-left is-two-fifth">
-                    <a>
-                      <span class="icon is-small" style="font-size: 25px;">
-                        <i class="fa fas fa-envelope" aria-hidden="true" (click)="SendMSG(user.AuthorId)"></i>
-                      </span>
-                    </a>
-                  </div>
-                  <div class="column has-icons-left has-text-left" >
-                    <a>
-                      <span class="icon is-small" style="font-size: 25px;">
-                        <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.AuthorId)"></i>
-                      </span>
-                    </a>
+@if (canBeShown == 2){
+  <div class="hero is-fullheight-with-navbar is-dark">
+    <div class="columns">
+      <div class="column is-one-third is-offset-one-third">
+        <article class="panel">
+  
+          <div class="panel-block">
+            <p class="control has-icons-left">
+              <input class="input is-hovered is-rounded is-link" type="text" placeholder="Filter by username" [value]="filter()" (keyup)="FilterMessages($event)"/>
+              <span class="icon is-left">
+                <i class="fa fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+          </div>
+  
+          @for (user of objectsToDisplay; track user) {
+            <div class="panel-block is-block">
+              <div class="columns is-vcentered">
+                <div class="column has-text-centered is-one-fifth">
+                  <figure class="image is-inline-block">
+                    <img class={{user.Username}} alt="Image"/>
+                  </figure>
+                </div>
+                <div class="column has-text-left">
+                  <strong>{{user.Username}}</strong>
+                  {{user.MessageText}}
+                </div>
+                <div class="column has-icons-right has-text-right is-one-fifth">
+                  <div class="columns is-vcentered">
+                    <div class="column"></div>
+                    <div class="column has-icons-left has-text-left is-two-fifth">
+                      <a>
+                        <span class="icon is-small" style="font-size: 25px;">
+                          <i class="fa fas fa-envelope" aria-hidden="true" (click)="SendMSG(user.AuthorId)"></i>
+                        </span>
+                      </a>
+                    </div>
+                    <div class="column has-icons-left has-text-left" >
+                      <a>
+                        <span class="icon is-small" style="font-size: 25px;">
+                          <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(user.AuthorId)"></i>
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        }
-        
-      </article>
+          }
+          
+        </article>
+      </div>
     </div>
   </div>
-</div>
+}
+@else if (canBeShown == 1) {
+  <section class="hero is-dark is-fullheight-with-navbar">
+    <div class="columns is-vcentered has-text-centered">
+        <div class="column">
 
+        </div>
+        <div class="column">
+            <img src="assets/images/banernomsg.png" width="80%" height="80%" alt="empty" style="margin-top: 35%;">
+        </div>
+        <div class="column">
+
+        </div>
+    </div>
+</section>
+}
+@else {
+  <section class="hero is-dark is-fullheight-with-navbar">
+    <div class="columns is-vcentered has-text-centered">
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+    </div>
+</section>
+}
 
 <div class="modal">
   <div class="modal-background"></div>
