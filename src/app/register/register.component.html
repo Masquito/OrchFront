@@ -97,6 +97,7 @@
             <div class="control">
               <button id="btnsub" type="submit" class="button is-success">Register</button>
             </div>
+            <p class="help is-danger" *ngIf="isUserRegisteredAlready">You have already registered an account</p>
             <p class="help is-danger" *ngIf="cannotSendFormData">Fill all fields</p>
           </div>
           <br>
@@ -110,3 +111,21 @@
   </div>
 </section>
 
+
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Registration successful!</p>
+      <button class="delete" aria-label="close" (click)="switchVis()"></button>
+    </header>
+    <section class="modal-card-body">
+      <h1 class="title">You can log in now.</h1>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-success" (click)="Proceedtologin()">Log in</button>
+      </div>
+    </footer>
+  </div>
+</div>

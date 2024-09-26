@@ -57,6 +57,9 @@
                             <p>
                               <strong>{{user.Username + "  "}}</strong>
                               <small>{{user.Age}}</small>
+                              @if(user.Role == "FUA"){
+                                <img src="assets/images/fullaccessicon.png" width="19px" height="19px" alt="Image" />
+                              }
                               <br />
                               <small>City: {{user.City}}</small>
                               <br />

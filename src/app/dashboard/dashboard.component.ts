@@ -36,22 +36,23 @@ export class DashboardComponent implements OnInit{
     })
 
     this.formDataMessage = new FormData();
+  }
 
+
+  ngOnInit(): void {
     const MMSDK = new MetaMaskSDK({
       dappMetadata: {
         name: "Orchard",
         url: window.location.href,
       },
-      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff",
+      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff", 
     });
     setTimeout(() => {
-  
-      this.ethereum = MMSDK.getProvider();
+      MMSDK.init().then(() => {
+        this.ethereum = MMSDK.getProvider();
+      });
     }, 0);
-  }
 
-
-  ngOnInit(): void {
     const ID = this.LoggedUserData.GetLoggedUserId();
     this.apiConn.GetLast5UserMessagess(ID)
     .pipe(

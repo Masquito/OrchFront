@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { APIConnectionService } from '../../../APIConnectionService/api-connection.service';
 import { Router, RouterOutlet, RouterLink, RouterModule } from '@angular/router';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
+import { catchError, map, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -37,6 +38,7 @@ export class RegisterComponent {
   cityIcon : boolean = true;
 
   cannotSendFormData : boolean = false;
+  isUserRegisteredAlready : boolean = false;
   
   doesUsernameExists : boolean = false;
   isUsernameEmpty : boolean = false;
@@ -156,15 +158,31 @@ export class RegisterComponent {
       const city = this.registerForm.get('City')?.value;
       const region = this.selectedWojewodztwo;
   
-      this.apicomm.register(uname, pass, email, age, city, region).subscribe({
+      this.apicomm.register(uname, pass, email, age, city, region)
+      .pipe(
+        catchError(error => {
+          if (error.status === 404) {
+            this.isUserRegisteredAlready = true;
+          }
+          return throwError(() => new Error("Error occured"));
+        }),
+        map((response) => {
+          const data = response.body;
+          return{data};
+          })
+        ).subscribe({
         next: (result) => {
           console.log('API Response:', result);
+          this.isUserRegisteredAlready = false;
+          this.switchVis();
         }
       })
-      alert("Registration successfull");
-      this.router.navigate(['/'])
     }
 
+  }
+
+  Proceedtologin(){
+    this.router.navigate(['/'])
   }
 
   CheckUsername(){
@@ -261,6 +279,16 @@ export class RegisterComponent {
     }
     else{
       return false;
+    }
+  }
+
+  switchVis(){
+    var item = document.getElementsByClassName('modal')[0].className;
+    if(item == "modal"){
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal is-active");
+    }
+    else{
+      document.getElementsByClassName('modal')[0].setAttribute("class", "modal");
     }
   }
 }

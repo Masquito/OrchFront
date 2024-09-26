@@ -8,11 +8,12 @@ import { catchError, map, tap, throwError } from 'rxjs';
 import { LoggedUserDataServiceService } from '../../../LoggedUserData/logged-user-data-service.service';
 import { RouterLink } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterOutlet, RouterLink, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterOutlet, RouterLink, RouterModule, CommonModule],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -23,6 +24,7 @@ export class LoginPageComponent{
   userRecived!: User;
   JWTToken : string = "empty";
   verificationPassed : boolean = false;
+  areCredentialsvalid : boolean = true;
 
   constructor (private API_COMM : APIConnectionService, private router : Router, private fb : FormBuilder, private appComponent: AppComponent, private LoggedUserData : LoggedUserDataServiceService) {
     appComponent.visible_nav = false;
@@ -51,7 +53,7 @@ export class LoginPageComponent{
       .pipe(
         catchError(error => {
           if (error.status === 404) {
-            alert("Login failed. Check Email or Password");
+            this.areCredentialsvalid = false;
           }
           return throwError(() => new Error("Error occured"));
         }),

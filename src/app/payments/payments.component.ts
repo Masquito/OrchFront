@@ -5,6 +5,7 @@ import { subscribe } from 'diagnostics_channel';
 import { CommonModule } from '@angular/common';
 import { MetaMaskSDK } from '@metamask/sdk';
 import { Router } from '@angular/router';
+import { catchError, map, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-payments',
@@ -36,6 +37,36 @@ export class PaymentsComponent implements OnInit{
         this.ethereum = MMSDK.getProvider();
       });
     }, 0);
+
+    this.apiconn.PaymentGettxhash(this.loggeduserdata.LoggedUser.Id)
+    .pipe(
+      catchError(error => {
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        const role = result.data.role;
+        if(role != "FUA" && role != "NFUA"){
+          this.WaitForTransactionConfirmation(role).then(ev => {
+            if(ev == 'confirmed'){
+              this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, "FUA").subscribe(); //GIVE USER FULL ACCESS IF PAYMENT HAS BEED CONFIRMED
+              this.loggeduserdata.LoggedUserRole = "FUA";
+              this.loggeduserdata.LoggedUser.Role = "FUA";
+              this.loggedUserRole = "FUA";
+            }
+          })
+        }
+
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
   }
 
   showBalance(){
@@ -44,6 +75,8 @@ export class PaymentsComponent implements OnInit{
         console.log(result);
       }
     })
+
+    
   }
 
   async ConnectMetaMask(){
@@ -64,10 +97,68 @@ export class PaymentsComponent implements OnInit{
       this.txhash = txhash;
     })
 
-    this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe();
+    this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe(
+      {
+        next: (result) => {
+          this.WaitForTransactionConfirmation(this.txhash).then(ev => {
+            if(ev == 'confirmed'){
+              this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, "FUA").subscribe(); //GIVE USER FULL ACCESS IF PAYMENT HAS BEED CONFIRMED
+              this.loggeduserdata.LoggedUserRole = "FUA";
+              this.loggeduserdata.LoggedUser.Role = "FUA";
+              this.loggedUserRole = "FUA";
+            }
+          })
+        }
+      }
+    );
     this.loggeduserdata.LoggedUserRole = this.txhash;
     this.loggeduserdata.LoggedUser.Role = this.txhash;
     this.loggedUserRole = this.txhash;
+
+    this.apiconn.PaymentGettxhash(this.loggeduserdata.LoggedUser.Id)
+    .pipe(
+      catchError(error => {
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
+      next: (result) => {
+        const role = result.data.role;
+        if(role != "FUA" && role != "NFUA"){
+          this.WaitForTransactionConfirmation(role).then(ev => {
+            if(ev == 'confirmed'){
+              this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, "FUA").subscribe(); //GIVE USER FULL ACCESS IF PAYMENT HAS BEED CONFIRMED
+              this.loggeduserdata.LoggedUserRole = "FUA";
+              this.loggeduserdata.LoggedUser.Role = "FUA";
+              this.loggedUserRole = "FUA";
+            }
+          })
+        }
+
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
+  }
+
+  async WaitForTransactionConfirmation(txhash : string){
+    let loop = () => {
+      return this.ethereum.request({method: 'eth_getTransactionReceipt', params:[txhash]}).then((ev: any) => {
+        if(ev != null){
+          return 'confirmed';
+        }
+        else{
+          return loop();
+        }
+      })
+    }
+
+    return await loop();
   }
 }
 
