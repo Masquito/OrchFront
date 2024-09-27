@@ -153,12 +153,22 @@ export class DashboardComponent implements OnInit{
     this.switchVis();
   }
   switchVis(){
-    var item = document.getElementsByClassName('modal')[0].className;
+    var item = document.getElementById('modal')?.className;
     if(item == "modal"){
-      document.getElementsByClassName('modal')[0].setAttribute("class", "modal is-active");
+      document.getElementById('modal')?.setAttribute("class", "modal is-active");
     }
     else{
-      document.getElementsByClassName('modal')[0].setAttribute("class", "modal");
+      document.getElementById('modal')?.setAttribute("class", "modal");
+    }
+  }
+
+  switchVis2(){
+    var item = document.getElementById('modal2')?.className;
+    if(item == "modal"){
+      document.getElementById('modal2')?.setAttribute("class", "modal is-active");
+    }
+    else{
+      document.getElementById('modal2')?.setAttribute("class", "modal");
     }
   }
 
@@ -166,12 +176,31 @@ export class DashboardComponent implements OnInit{
     this.formDataMessage.set('AuthorId', this.LoggedUserData.GetLoggedUserId()),
     this.formDataMessage.set('DeliveryId', this.currentUserToSendMessageTo),
     this.formDataMessage.set('Content', this.MessageToSendForm.get('Message')?.value)
-    this.apiConn.SendUserMessage(this.formDataMessage).subscribe({
+
+    this.apiConn.PermitMesssageSend(this.LoggedUserData.LoggedUser.Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          this.switchVis();
+          this.switchVis2();
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
       next: (result) => {
-        console.log(result);
+        this.apiConn.SendUserMessage(this.formDataMessage).subscribe({
+          next: (result) => {
+            console.log(result);
+          }
+        })
+        this.switchVis();
       }
     })
-    this.switchVis();
   }
 
   SeeUserProfile(Id : any): void {

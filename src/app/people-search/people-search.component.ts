@@ -24,8 +24,9 @@ export class PeopleSearchComponent{
   usersArrived = new Array();
   MessageToSendForm: FormGroup;
   currentUserToSendMessageTo : any;
+  apiconn: any;
 
-  constructor(private fb : FormBuilder, private apiComm : APIConnectionService,private loggedUserData : LoggedUserDataServiceService, private router1: Router){
+  constructor(private fb : FormBuilder, private apiComm : APIConnectionService, private loggedUserData : LoggedUserDataServiceService, private router1: Router){
     this.userdataform = this.fb.group({
       region:loggedUserData.LoggedUser.Region,
       age:loggedUserData.LoggedUser.Age,
@@ -133,12 +134,22 @@ export class PeopleSearchComponent{
     this.switchVis();
   }
   switchVis(){
-    var item = document.getElementsByClassName('modal')[0].className;
+    var item = document.getElementById('modal')?.className;
     if(item == "modal"){
-      document.getElementsByClassName('modal')[0].setAttribute("class", "modal is-active");
+      document.getElementById('modal')?.setAttribute("class", "modal is-active");
     }
     else{
-      document.getElementsByClassName('modal')[0].setAttribute("class", "modal");
+      document.getElementById('modal')?.setAttribute("class", "modal");
+    }
+  }
+
+  switchVis2(){
+    var item = document.getElementById('modal2')?.className;
+    if(item == "modal"){
+      document.getElementById('modal2')?.setAttribute("class", "modal is-active");
+    }
+    else{
+      document.getElementById('modal2')?.setAttribute("class", "modal");
     }
   }
 
@@ -146,11 +157,33 @@ export class PeopleSearchComponent{
     this.formDataMessage.set('AuthorId', this.loggedUserData.GetLoggedUserId()),
     this.formDataMessage.set('DeliveryId', this.currentUserToSendMessageTo),
     this.formDataMessage.set('Content', this.MessageToSendForm.get('Message')?.value)
-    this.apiComm.SendUserMessage(this.formDataMessage).subscribe({
+
+    this.apiComm.PermitMesssageSend(this.loggedUserData.LoggedUser.Id)
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          this.switchVis();
+          this.switchVis2();
+        }
+        return throwError(() => new Error("Error occured"));
+      }),
+      map((response) => {
+        const data = response.body;
+        return{data};
+      })
+    )
+    .subscribe({
       next: (result) => {
-        console.log(result);
+        this.apiComm.SendUserMessage(this.formDataMessage).subscribe({
+          next: (result) => {
+            console.log(result);
+          }
+        })
+        this.switchVis();
+      },
+      error: (error) => {
+        console.error('API Error:', error);
       }
-    })
-    this.switchVis();
+    });
   }
 }

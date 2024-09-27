@@ -21,6 +21,7 @@ export class APIConnectionService {
   UsersGetUserByIdUrl = 'https://localhost:7023/api/Users/getuserbyid';
   UsersGetSearchedUsersWithFilters = 'https://localhost:7023/api/Users/getuserssearchedforwithfilters';
   MessagesGetAllForUser = 'https://localhost:7023/api/Messages/GetAllUserMessagess';
+  MessagesPermitMessageSend = 'https://localhost:7023/api/Messages/permitmessagesend';
   MessagesGetAllForUserWithFilter = 'https://localhost:7023/api/Messages/GetAllUserMessagessWithFilter';
   MessagesSendUserMessage = 'https://localhost:7023/api/Messages/reciveMessageSendByUserToUser';
   UsersCheckIfUsernameExists = 'https://localhost:7023/api/Users/checkifusernameexists';
@@ -29,6 +30,14 @@ export class APIConnectionService {
   PaymentsCheck = 'https://localhost:7023/api/Payments/paymentcheck';
   PaymentsStoretxhash = 'https://localhost:7023/api/Payments/storetxhash';
   PaymentsGettxhash = 'https://localhost:7023/api/Payments/gettxhash';
+
+  PermitMesssageSend(Id : any){
+    const token = this.TC.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.MessagesPermitMessageSend, {Id}, {observe: 'response', headers: headers })
+  }
 
   GetUserById(Id : any){
     const token = this.TC.getToken();

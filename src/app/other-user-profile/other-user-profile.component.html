@@ -22,7 +22,7 @@
 
 
 
-<div class="modal">
+<div class="modal" id="modal">
   <div class="modal-background"></div>
   <div class="modal-card">
     <div class="columns is-vcentered">
@@ -43,4 +43,22 @@
     </div>
   </div>
   <button class="modal-close is-large" aria-label="close" (click)="switchVis()"></button>
+</div>
+
+<div class="modal" id="modal2">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title"><strong>Messages limit achieved</strong></p>
+      <button class="delete" aria-label="close" (click)="switchVis2()"></button>
+    </header>
+    <section class="modal-card-body">
+      Your daliy limit of 5 messages has been achieved already
+    </section>
+    <footer class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-warning" (click)="switchVis2()">Go back</button>
+      </div>
+    </footer>
+  </div>
 </div>
