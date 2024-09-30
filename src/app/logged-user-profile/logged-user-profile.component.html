@@ -96,5 +96,57 @@
               </div>
           </div>
       </div>
+
+      <div class="columns is-vcentered has-text-centered">
+        <div class="column">
+
+        </div>
+        <div class="column is-one-quarter">
+          <br><br><br>
+          <label class="label has-text-white">This is the preview of your account to other users</label>
+          <div class="box has-background-light has-text-left">
+            <article class="media">
+              <div class="media-left">
+                <figure class="image is-64x64">
+                  <img id="image2" alt="Image" width="64px" height="64px"/>
+                </figure>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    <strong>{{GetUsernameFromSignal() + "  "}}</strong>
+                    <small>{{GetAgeFromSignal()}}</small>
+                    @if(GetRole() == "FUA"){
+                      <img src="assets/images/fullaccessicon.png" width="19px" height="19px" alt="Image" />
+                    }
+                    <br />
+                    <small>City: {{GetCityFromSignal()}}</small>
+                    <br />
+                    <small>Region: {{selectedWojewodztwo}}</small>
+                  </p>
+                </div>
+                <nav class="level is-mobile">
+                  <div class="level-left">
+                    <a class="level-item" aria-label="retweet">
+                      <span class="icon is-small">
+                        <i class="fa fas fa-envelope" aria-hidden="true"></i>
+                      </span>
+                    </a>
+                    <a class="level-item" aria-label="reply">
+                        <span class="icon is-small">
+                          <i class="fa fas fa-arrow-right" aria-hidden="true"></i>
+                        </span>
+                      </a>
+                  </div>
+                </nav>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="column">
+          
+        </div>
+      </div>
+      
     </form>
 </section>

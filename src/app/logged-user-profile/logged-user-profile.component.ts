@@ -82,7 +82,29 @@ export class LoggedUserProfileComponent {
       const url = window.URL.createObjectURL(blob);
       const img = document.getElementById('image') as HTMLImageElement;
       img.src = url;
+      const img2 = document.getElementById('image2') as HTMLImageElement;
+      img2.src = url;
     });
+  }
+
+  GetUsernameFromSignal() : string {
+    return this.usernameSignal();
+  }
+
+  GetCityFromSignal() : string {
+    return this.citySignal();
+  }
+
+  GetRegionFromSignal() : string {
+    return this.regionSignal();
+  }
+
+  GetAgeFromSignal() : string{
+    return this.ageSignal().toString();
+  }
+
+  GetRole() : string | undefined {
+    return this.loggedUserData.LoggedUser.Role;
   }
 
   CheckPassword(){
@@ -320,5 +342,7 @@ export class LoggedUserProfileComponent {
     const url = URL.createObjectURL(blob);
     const img = document.getElementById('image') as HTMLImageElement;
     img.src = url;
+    const img2 = document.getElementById('image2') as HTMLImageElement;
+    img2.src = url;
   }
 }
