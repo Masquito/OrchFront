@@ -3,5 +3,7 @@
 }
 
 .hero{
-    background-image: url("D:\\Orch_FrontANGU_PracaInzynierska\\Orch_FrontAngu_Praca\\src\\assets\\images\\cosmos2.png");
+    background-image: url("C:\\Users\\aethi\\source\\repos\\OrchFront\\src\\assets\\images\\cosmos2.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
