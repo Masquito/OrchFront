@@ -4,15 +4,23 @@
             <div class="columns">
                 <div class="column is-one-third is-offset-one-third">
                     @for (notka of powiadomienia; track notka) {
-                        <div class="notification is-light">
-                            <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
-                            {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
-                            <a>
-                                <span class="icon is-small">
-                                    <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(notka.notification.authorId)"></i>
-                                </span>
-                            </a>
-                        </div>
+                        @if(notka.notification.content == "SYSTEM: Your transaction has been completed. Your are now a Full Access User."){
+                            <div class="notification is-light">
+                                <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
+                                {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
+                            </div>
+                        }
+                        @else {
+                            <div class="notification is-light">
+                                <button class="delete" (click)="DeleteNotification(notka.notification.id)"></button>
+                                {{notka.dateL + " " + notka.dateS + "    " + notka.notification.content}} 
+                                <a>
+                                    <span class="icon is-small">
+                                        <i class="fa fas fa-arrow-right" aria-hidden="true" (click)="SeeUserProfile(notka.notification.authorId)"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        }
                     }
                 </div>
                 </div>
