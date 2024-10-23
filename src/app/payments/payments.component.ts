@@ -97,7 +97,7 @@ export class PaymentsComponent implements OnInit{
       this.txhash = txhash;
     })
 
-    this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe(
+    this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe( //to służy temu, że gdyby aplikacja przestała działać przed potwierdzeniem transakcji to w ngInit wywyoła się GettXhash, który będzie znów w tle odpytywał o status, i dokończy przyznawianie uprawnień
       {
         next: (result) => {
           this.WaitForTransactionConfirmation(this.txhash).then(ev => { //Ponieważ metoda odpytywania jest asynchroniczna to wykonuje się w tle
