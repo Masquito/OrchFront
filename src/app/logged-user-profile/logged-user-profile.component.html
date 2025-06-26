@@ -2,6 +2,8 @@
     <form [formGroup]="userdataform" (ngSubmit)="SubmitData($event)">
       <div class="container">
           <div class="columns is-vcentered">
+
+            
               <div class="column has-text-centered">
                 <div class="field">
                   <label class="label has-text-white">Username</label>
@@ -45,14 +47,18 @@
                     <p class="help is-danger" *ngIf="!isEmailProper">Enter a proper email</p>
                   </div>
               </div>
+
+
               <div class="column has-text-centered">
                 <br><br><br><br><br><br>
                 <img id="image" alt="Your Image"><br><br>
                 <input formControlName="photo" type="file" (change)="onFileSelected($event)">
-                <p class="help is-warning">For the best result use an image with fixed size otherwise it might be deformed</p><br><br><br>
+                <p class="help is-warning">For the best result use an image with fixed size otherwise it might get deformed</p><br><br><br>
                 <button id="submitbtn" type="submit" class="button is-medium is-success">Update Data</button>
                 <p class="help is-danger" *ngIf="cannotSendFormData">Fill all fields</p>
               </div>
+
+
               <div class="column has-text-centered">
                   <div class="column has-text-centered">
                     <div class="field">

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MetaMaskSDK } from '@metamask/sdk';
 import { Router } from '@angular/router';
 import { catchError, map, throwError } from 'rxjs';
+import { InfuraAPIKey } from '../../../env';
 
 @Component({
   selector: 'app-payments',
@@ -30,7 +31,7 @@ export class PaymentsComponent implements OnInit{
         name: "Orchard",
         url: window.location.href,
       },
-      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff", 
+      infuraAPIKey: InfuraAPIKey, 
     });
     setTimeout(() => {
       MMSDK.init().then(() => {
@@ -80,40 +81,47 @@ export class PaymentsComponent implements OnInit{
   }
 
   async ConnectMetaMask(){
-      await this.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts : any) => {    //TO DZIAŁA BEZ ZARZUTU
+      await this.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts : any) => {   
         this.account = accounts[0];
         console.log(this.account);
       });
   };
 
-  async BuyFullAccess(){     //TO DZIAŁA BEZ ZARZUTU
+  async BuyFullAccess(){     
     let transactionDetails = {
       to: '0x40496e2d5a48779a2721e6effa5be7a7a9caa151',
       from: this.account,
       value: '38D7EA4C68000'
     };
 
-    await this.ethereum.request({method: 'eth_sendTransaction', params:[transactionDetails]}).then((txhash : any) => {
-      this.txhash = txhash;
-    })
-
-    this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe( //to służy temu, że gdyby aplikacja przestała działać przed potwierdzeniem transakcji to w ngInit wywyoła się GettXhash, który będzie znów w tle odpytywał o status, i dokończy przyznawianie uprawnień
-      {
-        next: (result) => {
-          this.WaitForTransactionConfirmation(this.txhash).then(ev => { //Ponieważ metoda odpytywania jest asynchroniczna to wykonuje się w tle
-            if(ev == 'confirmed'){
-              this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, "FUA").subscribe(); 
-              this.loggeduserdata.LoggedUserRole = "FUA";
-              this.loggeduserdata.LoggedUser.Role = "FUA";
-              this.loggedUserRole = "FUA";
+    try{
+      await this.ethereum.request({method: 'eth_sendTransaction', params:[transactionDetails]}).then((txhash : any) => {
+        this.txhash = txhash;  
+        this.loggedUserRole = "Awaiting assignment";
+        this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, this.txhash).subscribe( //to służy temu, że gdyby aplikacja przestała działać przed potwierdzeniem transakcji to w ngInit wywyoła się GettXhash, który będzie znów w tle odpytywał o status, i dokończy przyznawianie uprawnień
+          {
+            next: (result) => {
+              this.WaitForTransactionConfirmation(this.txhash).then(ev => { //Ponieważ metoda odpytywania jest asynchroniczna to wykonuje się w tle
+                if(ev == 'confirmed'){
+                  this.apiconn.PaymentStoretxhash(this.loggeduserdata.LoggedUser.Id, "FUA").subscribe(); 
+                  this.loggeduserdata.LoggedUserRole = "FUA";
+                  this.loggeduserdata.LoggedUser.Role = "FUA";
+                  this.loggedUserRole = "FUA";
+                }
+              })
             }
-          })
-        }
-      }
-    );
-    this.loggeduserdata.LoggedUserRole = this.txhash;
-    this.loggeduserdata.LoggedUser.Role = this.txhash;
-    this.loggedUserRole = this.txhash;
+          }
+        );
+        this.loggeduserdata.LoggedUserRole = this.txhash;
+        this.loggeduserdata.LoggedUser.Role = this.txhash;
+        this.loggedUserRole = this.txhash;
+      })
+    }
+    catch(error : any){
+      if (error.code === 4001) {
+        console.error("Użytkownik odrzucił podpisanie transakcji.");
+      } 
+    }
   }
 
   async WaitForTransactionConfirmation(txhash : string){

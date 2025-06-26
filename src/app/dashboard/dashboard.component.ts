@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../../Models/user';
 import { Router } from '@angular/router';
 import MetaMaskSDK from '@metamask/sdk';
+import { InfuraAPIKey } from '../../../env';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +46,7 @@ export class DashboardComponent implements OnInit{
         name: "Orchard",
         url: window.location.href,
       },
-      infuraAPIKey: "b8af0de6aa8e4d8aae4902937a7386ff", 
+      infuraAPIKey: InfuraAPIKey, 
     });
     setTimeout(() => {
       MMSDK.init().then(() => {
